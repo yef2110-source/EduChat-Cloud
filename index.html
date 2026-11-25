@@ -421,6 +421,17 @@
     .call-note{font-size:11px;color:#ffc6c3;background:rgba(229,57,53,.12);border:1px solid rgba(229,57,53,.25);padding:7px 10px;border-radius:10px;line-height:1.6}
     @media(max-width:920px){.app.active{border-radius:0}.room-head{padding:10px 12px}.room-head>div:last-child{gap:4px!important}.room-head button{min-width:38px;padding:7px 9px}}
 
+
+    .call-stage{display:none;position:fixed;inset:0;z-index:9999;background:#071016;color:#f3f7f8;flex-direction:column;padding:12px;gap:10px}
+    .call-stage.open{display:flex}
+    .live-call-head{display:flex;align-items:center;gap:9px;flex-wrap:wrap;justify-content:space-between;background:#111b21;border:1px solid rgba(0,184,124,.25);border-radius:15px;padding:10px 12px}
+    .live-call-head>div{display:flex;flex-direction:column;gap:3px;flex:1;min-width:130px}
+    .live-call-head small,.live-call-foot{font-size:11px;color:#9aaeb6}
+    .jitsi-mount{flex:1;min-height:240px;border-radius:16px;overflow:hidden;background:#111b21}
+    .jitsi-mount iframe{width:100%!important;height:100%!important;border:0}
+    .live-call-foot{text-align:center;line-height:1.6;margin:0}
+    @media(max-width:600px){.call-stage{padding:7px}.live-call-head{padding:8px}.live-call-head button{font-size:11px;padding:8px}}
+
   </style>
 </head>
 <body>
@@ -582,7 +593,7 @@
                 </div>
               </div>
 
-              <div class="call-bar" id="callBar"><span class="call-note">واجهة الاتصال جاهزة بصرياً؛ الاتصال بين حسابين غير مفعّل بعد ويتطلب قناة signaling آمنة.</span>
+              <div class="call-bar" id="callBar">
                 <strong id="callBarText"></strong>
                 <div style="display:flex; gap:6px;">
                   <button type="button" id="muteMicBtn">كتم</button>
@@ -722,6 +733,17 @@
         <button type="button" class="b-btn" data-tab="videos" id="b_videos">الفيديوهات</button>
       </nav>
     </div>
+  </div>
+
+
+  <div class="call-stage" id="liveCallStage" aria-hidden="true">
+    <div class="live-call-head">
+      <div><strong id="liveCallTitle">مكالمة EduChat</strong><small id="liveCallStatus">جاري تجهيز الاتصال الآمن عبر Jitsi</small></div>
+      <button type="button" id="copyCallLinkBtn">نسخ رابط الدعوة</button>
+      <button type="button" class="btn-danger" id="closeLiveCallBtn">إنهاء المكالمة ✕</button>
+    </div>
+    <div id="jitsiMount" class="jitsi-mount"></div>
+    <p class="live-call-foot">للانضمام من الطرف الآخر: افتح نفس المحادثة واضغط اتصال، أو استخدم رابط الدعوة. ستحتاج إلى السماح بالميكروفون/الكاميرا.</p>
   </div>
 
   <!-- النوافذ المنبثقة -->
@@ -1642,32 +1664,80 @@
       snapDataUrl = null; switchTab('chats'); toast('تم إرسال اللقطة سحابياً');
     });
 
-    // المكالمة والرنين
-    let callSt = null, micMuted = false;
-    async function startCall(video) {
-      const p = getPeerMeta(); if (!p) return;
-      try { callSt = await navigator.mediaDevices.getUserMedia({ audio: true, video }); } catch { toast('اسمح باستخدام الميكروفون أو الكاميرا أولاً'); return; }
-      ringtone.start();
-      document.getElementById('callBarText').textContent = `${p.name} · ${video ? 'فيديو' : 'صوتي'} — معاينة محلية فقط`;
-      document.getElementById('callBar').classList.add('show');
+    // مكالمات صوت/فيديو فعلية عبر Jitsi Meet (خدمة خارجية)
+    let liveCallApi = null, liveCallRoom = null, jitsiLoading = null;
+    function callRoomName(peer) {
+      const a = String(state.user?.public_id || 'guest');
+      const b = String(state.threadType === 'dm' ? state.targetId : state.targetId || 'general');
+      const raw = ['EduChat', state.threadType, a, b].sort().join('|');
+      let h = 2166136261;
+      for (let i=0;i<raw.length;i++) { h ^= raw.charCodeAt(i); h = Math.imul(h,16777619); }
+      return 'EduChatRoom' + (h>>>0).toString(16);
     }
-    document.getElementById('inChatAudioBtn').addEventListener('click', () => startCall(false));
-    document.getElementById('inChatVideoBtn').addEventListener('click', () => startCall(true));
-    document.getElementById('simIncomingBtn')?.addEventListener('click', () => {
-      const p = getPeerMeta(); if (!p) return;
-      document.getElementById('callerNameTxt').textContent = p.name;
-      document.getElementById('callerAvatarBox').innerHTML = `<img src="${p.avatar}" alt=""/>`;
-      ringtone.start(); document.getElementById('incomingModal').classList.add('open');
-    });
-    document.getElementById('acceptCallBtn').addEventListener('click', async () => {
-      ringtone.stop(); document.getElementById('incomingModal').classList.remove('open');
-      try { callSt = await navigator.mediaDevices.getUserMedia({ audio: true }); } catch {}
-      document.getElementById('callBar').classList.add('show');
-    });
-    document.getElementById('rejectCallBtn').addEventListener('click', () => { ringtone.stop(); document.getElementById('incomingModal').classList.remove('open'); });
-    document.getElementById('muteMicBtn').addEventListener('click', () => { micMuted = !micMuted; if (callSt) callSt.getAudioTracks().forEach((t) => (t.enabled = !micMuted)); });
-    document.getElementById('endCallBtn').addEventListener('click', () => { ringtone.stop(); if (callSt) { callSt.getTracks().forEach((t) => t.stop()); callSt = null; } document.getElementById('callBar').classList.remove('show'); });
-
+    function loadJitsiApi() {
+      if (window.JitsiMeetExternalAPI) return Promise.resolve();
+      if (jitsiLoading) return jitsiLoading;
+      jitsiLoading = new Promise((resolve,reject) => {
+        const script=document.createElement('script');
+        script.src='https://meet.jit.si/external_api.js'; script.async=true;
+        script.onload=resolve; script.onerror=()=>reject(new Error('تعذر تحميل خدمة المكالمات'));
+        document.head.appendChild(script);
+      });
+      return jitsiLoading;
+    }
+    async function startCall(video) {
+      const peer=getPeerMeta(); if(!peer){toast('اختر محادثة أولاً');return;}
+      if(!state.user?.public_id){toast('سجّل الدخول أولاً');return;}
+      const stage=document.getElementById('liveCallStage');
+      stage.classList.add('open'); stage.setAttribute('aria-hidden','false');
+      document.getElementById('liveCallTitle').textContent=(video?'مكالمة فيديو مع ':'مكالمة صوتية مع ')+peer.name;
+      document.getElementById('liveCallStatus').textContent='جاري الاتصال بخدمة المكالمات…';
+      liveCallRoom=callRoomName(peer);
+      try {
+        await loadJitsiApi();
+        if(liveCallApi){liveCallApi.dispose();liveCallApi=null;}
+        document.getElementById('jitsiMount').innerHTML='';
+        liveCallApi=new window.JitsiMeetExternalAPI('meet.jit.si',{
+          roomName:liveCallRoom,
+          parentNode:document.getElementById('jitsiMount'),
+          width:'100%',height:'100%',
+          userInfo:{displayName:state.user.username||'EduChat User'},
+          configOverwrite:{
+            startWithAudioMuted:false,startWithVideoMuted:!video,
+            prejoinPageEnabled:true,disableDeepLinking:true,
+            enableWelcomePage:false,enableClosePage:false,
+            toolbarButtons:['microphone','camera','desktop','chat','raisehand','tileview','hangup']
+          },
+          interfaceConfigOverwrite:{APP_NAME:'EduChat',MOBILE_APP_PROMO:false,SHOW_JITSI_WATERMARK:false,SHOW_BRAND_WATERMARK:false}
+        });
+        liveCallApi.addListener('videoConferenceJoined',()=>document.getElementById('liveCallStatus').textContent='أنت داخل غرفة المكالمة — ينتظر انضمام الطرف الآخر');
+        liveCallApi.addListener('participantJoined',()=>document.getElementById('liveCallStatus').textContent='تم انضمام الطرف الآخر');
+        liveCallApi.addListener('readyToClose',closeLiveCall);
+        document.getElementById('copyCallLinkBtn').onclick=async()=>{
+          const url='https://meet.jit.si/'+encodeURIComponent(liveCallRoom);
+          try{await navigator.clipboard.writeText(url);toast('تم نسخ رابط الدعوة');}
+          catch{prompt('انسخ رابط الدعوة:',url);}
+        };
+      } catch(err) {
+        document.getElementById('liveCallStatus').textContent=err.message||'تعذر بدء المكالمة';
+        toast(err.message||'تعذر بدء المكالمة');
+      }
+    }
+    function closeLiveCall(){
+      if(liveCallApi){try{liveCallApi.dispose();}catch{} liveCallApi=null;}
+      document.getElementById('jitsiMount').innerHTML='';
+      document.getElementById('liveCallStage').classList.remove('open');
+      document.getElementById('liveCallStage').setAttribute('aria-hidden','true');
+      liveCallRoom=null;
+    }
+    document.getElementById('inChatAudioBtn').addEventListener('click',()=>startCall(false));
+    document.getElementById('inChatVideoBtn').addEventListener('click',()=>startCall(true));
+    document.getElementById('closeLiveCallBtn').addEventListener('click',closeLiveCall);
+    document.getElementById('muteMicBtn').addEventListener('click',()=>{if(liveCallApi)liveCallApi.executeCommand('toggleAudio');});
+    document.getElementById('endCallBtn').addEventListener('click',closeLiveCall);
+    document.getElementById('acceptCallBtn').addEventListener('click',()=>{ringtone.stop();document.getElementById('incomingModal').classList.remove('open');startCall(false);});
+    document.getElementById('rejectCallBtn').addEventListener('click',()=>{ringtone.stop();document.getElementById('incomingModal').classList.remove('open');});
+    
     // التنقل وتبديل الثيم واللغات
     function switchTab(t) {
       state.tab = t;
