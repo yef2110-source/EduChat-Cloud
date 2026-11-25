@@ -390,7 +390,38 @@
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
     }
-\n  </style>
+\n
+    /* EduChat Calls UI refresh — emerald / graphite visual system */
+    :root {
+      --bg-base:#0B141A; --bg-ambient:#0B141A;
+      --surface:rgba(17,27,33,.96); --surface-solid:#111B21;
+      --surface-2:#17252D; --surface-3:#20343D;
+      --text:#F3F7F8; --muted:#9AAEB6;
+      --border:rgba(148,170,180,.15); --border-strong:rgba(0,184,124,.48);
+      --primary:#00B87C; --primary-grad:linear-gradient(135deg,#00B87C,#008F68);
+      --primary-glow:0 8px 24px rgba(0,184,124,.22);
+      --accent-soft:rgba(0,184,124,.13); --success:#00B87C; --danger:#E53935;
+    }
+    body.theme-light {--bg-base:#F3F7F8;--bg-ambient:#F3F7F8;--surface:#fff;--surface-solid:#fff;--surface-2:#edf3f4;--surface-3:#e3ecee;--text:#142329;--muted:#61747b;--border:rgba(20,50,60,.13);--border-strong:rgba(0,184,124,.4);--primary:#009e70;--primary-grad:linear-gradient(135deg,#00B87C,#008F68);--accent-soft:rgba(0,184,124,.1);--success:#009e70;}
+    body.theme-crimson {--bg-base:#0B141A;--bg-ambient:#0B141A;--surface:#111B21;--surface-solid:#111B21;--surface-2:#17252D;--surface-3:#20343D;--text:#F3F7F8;--muted:#9AAEB6;--border:rgba(148,170,180,.15);--border-strong:rgba(229,57,53,.45);--primary:#E53935;--primary-grad:linear-gradient(135deg,#E53935,#B71C1C);--accent-soft:rgba(229,57,53,.13);--success:#00B87C;}
+    body{background:var(--bg-base);padding:0}
+    .app{border-radius:18px}
+    .room-pane{background-color:#0B141A;background-image:radial-gradient(rgba(0,184,124,.055) 1px,transparent 1px);background-size:24px 24px}
+    .room-head{background:#111B21;border-bottom-color:rgba(255,255,255,.07);min-height:72px}
+    .room-head #roomTitle{font-size:15px!important}
+    .room-head .avatar{border:2px solid rgba(0,184,124,.5)}
+    .msg-bubble.mine{background:linear-gradient(135deg,#006B50,#008F68);border-radius:18px 18px 4px 18px}
+    .msg-bubble.theirs{background:#1B2A32;border-color:rgba(255,255,255,.05);border-radius:18px 18px 18px 4px}
+    .composer{background:#111B21;border-top-color:rgba(255,255,255,.07)}
+    .composer input[type="text"]{background:#203039;border-color:transparent}
+    .btn-primary{background:var(--primary-grad)}
+    .call-bar{background:#12382F;border-color:rgba(0,184,124,.25)}
+    .incoming-box{background:#111B21}
+    .caller-ring{background:linear-gradient(135deg,#00B87C,#006B50)}
+    .call-note{font-size:11px;color:#ffc6c3;background:rgba(229,57,53,.12);border:1px solid rgba(229,57,53,.25);padding:7px 10px;border-radius:10px;line-height:1.6}
+    @media(max-width:920px){.app.active{border-radius:0}.room-head{padding:10px 12px}.room-head>div:last-child{gap:4px!important}.room-head button{min-width:38px;padding:7px 9px}}
+
+  </style>
 </head>
 <body>
   <div class="toast" id="toastBox"></div>
@@ -544,14 +575,14 @@
                   </div>
                 </div>
                 <div style="display:flex; gap:5px; flex-wrap:wrap;">
-                  <button type="button" id="inChatAudioBtn" class="btn-primary">صوتي</button>
-                  <button type="button" id="inChatVideoBtn">فيديو</button>
-                  <button type="button" id="simIncomingBtn">رنين وارد</button>
+                  <button type="button" id="inChatAudioBtn" class="btn-primary" aria-label="اتصال صوتي">☎ صوتي</button>
+                  <button type="button" id="inChatVideoBtn" aria-label="اتصال فيديو">▣ فيديو</button>
+                  
                   <button type="button" id="refreshMsgsBtn">تحديث</button>
                 </div>
               </div>
 
-              <div class="call-bar" id="callBar">
+              <div class="call-bar" id="callBar"><span class="call-note">واجهة الاتصال جاهزة بصرياً؛ الاتصال بين حسابين غير مفعّل بعد ويتطلب قناة signaling آمنة.</span>
                 <strong id="callBarText"></strong>
                 <div style="display:flex; gap:6px;">
                   <button type="button" id="muteMicBtn">كتم</button>
@@ -1615,14 +1646,14 @@
     let callSt = null, micMuted = false;
     async function startCall(video) {
       const p = getPeerMeta(); if (!p) return;
-      try { callSt = await navigator.mediaDevices.getUserMedia({ audio: true, video }); } catch {}
+      try { callSt = await navigator.mediaDevices.getUserMedia({ audio: true, video }); } catch { toast('اسمح باستخدام الميكروفون أو الكاميرا أولاً'); return; }
       ringtone.start();
-      document.getElementById('callBarText').textContent = `${p.name} (${video ? 'فيديو' : 'صوتي'})`;
+      document.getElementById('callBarText').textContent = `${p.name} · ${video ? 'فيديو' : 'صوتي'} — معاينة محلية فقط`;
       document.getElementById('callBar').classList.add('show');
     }
     document.getElementById('inChatAudioBtn').addEventListener('click', () => startCall(false));
     document.getElementById('inChatVideoBtn').addEventListener('click', () => startCall(true));
-    document.getElementById('simIncomingBtn').addEventListener('click', () => {
+    document.getElementById('simIncomingBtn')?.addEventListener('click', () => {
       const p = getPeerMeta(); if (!p) return;
       document.getElementById('callerNameTxt').textContent = p.name;
       document.getElementById('callerAvatarBox').innerHTML = `<img src="${p.avatar}" alt=""/>`;
