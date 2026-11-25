@@ -2,9 +2,11 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes" />
   <meta name="theme-color" content="#070612" />
-  <title>EduChat — منصة الدراسة والتواصل السحابية</title>
+  <title>EduChat — منصتك الدراسية السحابية</title>
+  <meta name="description" content="EduChat منصة تعليمية تجمع الدروس والملفات والفيديوهات الدراسية والتواصل بين الطلاب في مكان واحد." />
+  <meta name="color-scheme" content="dark light" />
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0%25' stop-color='%236366f1'/%3E%3Cstop offset='100%25' stop-color='%23a855f7'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='18' fill='url(%23g)'/%3E%3Cpath d='M32 14L10 24l22 10 18-8.2V38h4V24L32 14zm-12 18v8c0 5 5.4 9 12 9s12-4 12-9v-8l-12 5.5L20 32z' fill='%23fff'/%3E%3C/svg%3E" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -344,7 +346,51 @@
     .caller-img { width: 100%; height: 100%; border-radius: 50%; background: var(--surface-2); overflow: hidden; display: grid; place-items: center; font-size: 30px; font-weight: 900; }
     .caller-img img { width: 100%; height: 100%; object-fit: cover; }
     .check-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 11px; border-radius: 11px; background: var(--surface-2); border: 1px solid var(--border); cursor: pointer; }
-  </style>
+
+    /* تحسينات واجهة وتجربة الاستخدام — دون تغيير وظائف المنصة */
+    :root { color-scheme: dark; scroll-behavior: smooth; }
+    body { min-width: 320px; }
+    button, a, input, textarea, select { touch-action: manipulation; }
+    button:focus-visible, a:focus-visible, input:focus-visible, textarea:focus-visible,
+    select:focus-visible, [tabindex]:focus-visible {
+      outline: 3px solid var(--primary);
+      outline-offset: 3px;
+    }
+    button { min-height: 38px; }
+    img, video, iframe { max-width: 100%; }
+    .app, .login-card, .modal-card { min-width: 0; }
+    .tab-pane, .content-wrap, .main-stage, .room-pane, .lesson-stage { min-width: 0; }
+    .msgs-area, .threads-list, .lessons-side, .desktop-rail { overscroll-behavior: contain; }
+    .thread-card, .lesson-card, .rail-nav-btn, .pill { transition: background .18s ease, border-color .18s ease, transform .18s ease; }
+    .thread-card:active, .lesson-card:active { transform: scale(.99); }
+    .msg-bubble { overflow-wrap: anywhere; }
+    .composer { padding-bottom: max(11px, env(safe-area-inset-bottom)); }
+    .bottom-bar { padding-bottom: max(7px, env(safe-area-inset-bottom)); }
+    .modal-bg { padding: max(12px, env(safe-area-inset-top)) 12px max(12px, env(safe-area-inset-bottom)); }
+    @media (max-width: 600px) {
+      body { padding: 0; }
+      .login-card { min-height: 100svh; justify-content: center; border-radius: 0; border: 0; padding: 24px 18px; }
+      .app.active { height: 100svh; min-height: 100svh; }
+      .mobile-topbar { padding-top: max(9px, env(safe-area-inset-top)); }
+      .msgs-area { padding: 12px 10px; gap: 9px; }
+      .msg-bubble { max-width: 88%; padding: 10px 12px; }
+      .room-head { padding: 9px 10px; }
+      .composer { padding-inline: 9px; gap: 6px; }
+      .composer input[type="text"] { min-width: 0; }
+      .lessons-side { max-height: 42svh; }
+      .stage-top { padding: 9px 10px; }
+      .modal-card { max-height: 88svh; overflow-y: auto; }
+    }
+    @media (max-width: 380px) {
+      .mobile-topbar { gap: 4px; padding-inline: 7px; }
+      .mobile-topbar button { padding-inline: 8px; font-size: 11px; }
+      .msg-bubble { max-width: 94%; }
+      .voice-player { min-width: 0; width: 100%; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+    }
+\n  </style>
 </head>
 <body>
   <div class="toast" id="toastBox"></div>
