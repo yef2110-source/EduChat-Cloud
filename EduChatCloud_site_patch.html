@@ -1,0 +1,1798 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
+  <meta name="theme-color" content="#070612" />
+  <title>EduChat — منصة الدراسة والتواصل السحابية</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0%25' stop-color='%236366f1'/%3E%3Cstop offset='100%25' stop-color='%23a855f7'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='18' fill='url(%23g)'/%3E%3Cpath d='M32 14L10 24l22 10 18-8.2V38h4V24L32 14zm-12 18v8c0 5 5.4 9 12 9s12-4 12-9v-8l-12 5.5L20 32z' fill='%23fff'/%3E%3C/svg%3E" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg-base: #070612;
+      --bg-ambient: radial-gradient(circle at 12% 14%, rgba(99, 102, 241, 0.25), transparent 42%),
+                    radial-gradient(circle at 88% 82%, rgba(168, 85, 247, 0.22), transparent 46%),
+                    #070612;
+      --surface: rgba(16, 15, 35, 0.88);
+      --surface-solid: #111026;
+      --surface-2: rgba(26, 24, 54, 0.82);
+      --surface-3: rgba(39, 36, 78, 0.9);
+      --text: #f8fafc;
+      --muted: #94a3b8;
+      --border: rgba(139, 92, 246, 0.22);
+      --border-strong: rgba(168, 85, 247, 0.45);
+      --primary: #7c3aed;
+      --primary-grad: linear-gradient(135deg, #6366f1 0%, #8b5cf6 52%, #a855f7 100%);
+      --primary-glow: 0 8px 26px rgba(124, 58, 237, 0.4);
+      --accent-soft: rgba(124, 58, 237, 0.18);
+      --saved: #fbbf24;
+      --saved-soft: rgba(251, 191, 36, 0.16);
+      --danger: #ef4444;
+      --success: #10b981;
+      --radius-xl: 26px;
+      --radius-lg: 18px;
+      --radius-md: 14px;
+    }
+
+    body.theme-light {
+      --bg-base: #eef2ff;
+      --bg-ambient: radial-gradient(circle at 12% 12%, rgba(99, 102, 241, 0.15), transparent 45%),
+                    radial-gradient(circle at 88% 85%, rgba(168, 85, 247, 0.12), transparent 45%),
+                    #f4f6fc;
+      --surface: rgba(255, 255, 255, 0.92);
+      --surface-solid: #ffffff;
+      --surface-2: #f1f4fb;
+      --surface-3: #e4e9f7;
+      --text: #0f172a;
+      --muted: #64748b;
+      --border: rgba(99, 102, 241, 0.16);
+      --border-strong: rgba(99, 102, 241, 0.34);
+      --primary: #6366f1;
+      --primary-grad: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+      --primary-glow: 0 8px 22px rgba(79, 70, 229, 0.25);
+      --accent-soft: rgba(99, 102, 241, 0.11);
+      --saved: #d97706;
+      --saved-soft: rgba(217, 119, 6, 0.13);
+    }
+
+    body.theme-crimson {
+      --bg-base: #160409;
+      --bg-ambient: radial-gradient(circle at 15% 15%, rgba(225, 29, 72, 0.26), transparent 45%),
+                    radial-gradient(circle at 85% 85%, rgba(159, 18, 57, 0.26), transparent 45%),
+                    #160409;
+      --surface: rgba(34, 8, 16, 0.88);
+      --surface-solid: #240811;
+      --surface-2: rgba(52, 13, 25, 0.84);
+      --surface-3: rgba(74, 19, 36, 0.92);
+      --text: #fff1f2;
+      --muted: #fda4af;
+      --border: rgba(251, 113, 133, 0.24);
+      --border-strong: rgba(251, 113, 133, 0.44);
+      --primary: #e11d48;
+      --primary-grad: linear-gradient(135deg, #e11d48 0%, #f43f5e 100%);
+      --primary-glow: 0 8px 24px rgba(225, 29, 72, 0.38);
+      --accent-soft: rgba(225, 29, 72, 0.18);
+      --saved: #fbbf24;
+      --saved-soft: rgba(251, 191, 36, 0.18);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Cairo', system-ui, -apple-system, sans-serif; -webkit-tap-highlight-color: transparent; }
+
+    body {
+      background: var(--bg-ambient);
+      background-color: var(--bg-base);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 12px;
+      overflow-x: hidden;
+    }
+
+    ::-webkit-scrollbar { width: 5px; height: 5px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: rgba(139, 92, 246, 0.3); border-radius: 99px; }
+
+    button, input, textarea, select { font-family: inherit; color: var(--text); outline: none; }
+
+    button {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 13px;
+      padding: 8px 13px;
+      font-size: 12.5px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.15s ease, filter 0.15s ease, border-color 0.2s ease, background 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+    button:hover { filter: brightness(1.08); border-color: var(--border-strong); }
+    button:active { transform: scale(0.97); }
+    button:disabled { opacity: 0.55; cursor: not-allowed; }
+
+    input, textarea, select {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 13px;
+      padding: 10px 13px;
+      font-size: 13px;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+    input:focus, textarea:focus, select:focus { border-color: var(--primary); box-shadow: 0 0 0 3px var(--accent-soft); }
+
+    .btn-primary { background: var(--primary-grad); color: #fff; border-color: transparent; box-shadow: var(--primary-glow); }
+    .btn-success { background: linear-gradient(135deg, #059669, #10b981); color: #fff; border-color: transparent; }
+    .btn-danger { background: linear-gradient(135deg, #dc2626, #ef4444); color: #fff; border-color: transparent; }
+    .btn-saved { background: var(--saved-soft); color: var(--saved); border-color: rgba(251, 191, 36, 0.38); }
+
+    .toast {
+      position: fixed; top: 16px; left: 50%; transform: translateX(-50%) translateY(-14px);
+      background: var(--surface-solid); border: 1px solid var(--border-strong);
+      padding: 9px 18px; border-radius: 999px; font-size: 12.5px; font-weight: 700;
+      z-index: 300; opacity: 0; pointer-events: none; box-shadow: 0 14px 34px rgba(0, 0, 0, 0.48);
+      transition: opacity 0.22s ease, transform 0.22s ease;
+    }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    /* =========================================================================
+       شاشة تسجيل الدخول / استعادة الحساب السحابي
+       ========================================================================= */
+    .login-card {
+      width: 100%; max-width: 460px; margin: auto;
+      background: var(--surface); backdrop-filter: blur(22px);
+      border: 1px solid var(--border-strong); border-radius: 28px;
+      padding: 28px 24px; display: flex; flex-direction: column; gap: 15px;
+      box-shadow: 0 28px 70px rgba(0, 0, 0, 0.52);
+    }
+
+    .brand-hero { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 6px; }
+    .brand-emblem {
+      width: 66px; height: 66px; border-radius: 21px; background: var(--primary-grad);
+      display: grid; place-items: center; box-shadow: var(--primary-glow); margin-bottom: 4px;
+    }
+    .brand-hero h1 { font-size: 24px; font-weight: 900; }
+    .brand-hero .sub-tag { font-size: 11.5px; font-weight: 700; color: var(--primary); background: var(--accent-soft); padding: 3px 12px; border-radius: 999px; }
+
+    .auth-mode-tabs { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; background: var(--surface-2); padding: 4px; border-radius: 14px; border: 1px solid var(--border); }
+    .auth-mode-btn { background: transparent; border: none; padding: 7px; font-size: 12px; color: var(--muted); }
+    .auth-mode-btn.active { background: var(--primary-grad); color: #fff; }
+
+    .theme-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+    .theme-chip { padding: 8px; font-size: 12px; flex-direction: column; gap: 4px; }
+    .theme-chip.active { border-color: var(--primary); background: var(--accent-soft); color: var(--primary); }
+    .swatch-dot { width: 16px; height: 16px; border-radius: 50%; border: 2px solid rgba(255,255,255,0.25); }
+
+    .err-box {
+      display: none; padding: 10px 12px; border-radius: 12px; font-size: 12px; font-weight: 700;
+      color: #fca5a5; background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.35);
+    }
+    .err-box.show { display: block; }
+
+    /* =========================================================================
+       التخطيط الاحترافي الرئيسي (مستلهم من EduChat)
+       ========================================================================= */
+    .app {
+      width: 100%; max-width: 1360px; height: calc(100vh - 24px); min-height: 620px;
+      background: var(--surface); backdrop-filter: blur(22px);
+      border: 1px solid var(--border); border-radius: var(--radius-xl);
+      overflow: hidden; display: none; box-shadow: 0 28px 75px rgba(0, 0, 0, 0.5);
+    }
+    .app.active { display: grid; grid-template-columns: 260px 1fr; }
+
+    .desktop-rail {
+      border-inline-end: 1px solid var(--border);
+      background: linear-gradient(180deg, rgba(24, 21, 52, 0.72) 0%, rgba(13, 12, 28, 0.9) 100%);
+      padding: 18px 14px; display: flex; flex-direction: column; gap: 14px; overflow-y: auto;
+    }
+    body.theme-light .desktop-rail { background: rgba(245, 247, 255, 0.95); }
+    body.theme-crimson .desktop-rail { background: linear-gradient(180deg, rgba(48, 11, 22, 0.8) 0%, rgba(26, 6, 12, 0.94) 100%); }
+
+    .rail-brand { display: flex; align-items: center; gap: 10px; padding: 2px 4px; }
+    .rail-logo { width: 40px; height: 40px; border-radius: 13px; background: var(--primary-grad); display: grid; place-items: center; box-shadow: var(--primary-glow); flex-shrink: 0; }
+    .rail-brand-text strong { font-size: 17px; font-weight: 900; display: block; line-height: 1.1; }
+    .rail-brand-text small { font-size: 10.5px; color: var(--muted); font-weight: 600; }
+
+    .rail-profile {
+      background: var(--surface-2); border: 1px solid var(--border); border-radius: var(--radius-lg);
+      padding: 12px; display: flex; flex-direction: column; gap: 9px;
+    }
+    .avatar {
+      width: 42px; height: 42px; border-radius: 50%; background: var(--primary-grad); color: #fff;
+      font-weight: 800; font-size: 15px; display: grid; place-items: center; overflow: hidden; flex-shrink: 0;
+      border: 2px solid rgba(255,255,255,0.16);
+    }
+    .avatar img { width: 100%; height: 100%; object-fit: cover; }
+
+    .cloud-pill {
+      display: inline-flex; align-items: center; gap: 5px; font-size: 11px; font-weight: 700;
+      padding: 3px 9px; border-radius: 999px; background: rgba(16, 185, 129, 0.14); color: var(--success);
+    }
+    .cloud-pill.warn { background: rgba(239, 68, 68, 0.14); color: #fca5a5; }
+    .cloud-dot { width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+
+    .rail-nav { display: flex; flex-direction: column; gap: 5px; }
+    .rail-nav-btn { width: 100%; justify-content: flex-start; padding: 11px 14px; background: transparent; border-color: transparent; color: var(--muted); font-size: 13.5px; }
+    .rail-nav-btn:hover { background: var(--surface-2); color: var(--text); }
+    .rail-nav-btn.active { background: var(--primary-grad); color: #fff; box-shadow: var(--primary-glow); }
+
+    .rail-badge { margin-inline-start: auto; background: rgba(255,255,255,0.2); color: #fff; font-size: 11px; padding: 1px 8px; border-radius: 999px; }
+    .rail-nav-btn:not(.active) .rail-badge { background: var(--accent-soft); color: var(--primary); }
+
+    .main-stage { display: flex; flex-direction: column; overflow: hidden; }
+    .mobile-topbar { display: none; padding: 9px 12px; border-bottom: 1px solid var(--border); background: var(--surface-solid); align-items: center; justify-content: space-between; gap: 6px; flex-wrap: wrap; }
+
+    .content-wrap { flex: 1; overflow: hidden; display: flex; }
+    .tab-pane { display: none; flex: 1; overflow: hidden; }
+    .tab-pane.active { display: flex; }
+
+    /* =========================================================================
+       المحادثات والأصدقاء والجروبات السحابية
+       ========================================================================= */
+    .chats-grid { flex: 1; display: grid; grid-template-columns: 345px 1fr; overflow: hidden; }
+    .sidebar-pane { border-inline-end: 1px solid var(--border); background: rgba(8, 7, 20, 0.45); display: flex; flex-direction: column; overflow: hidden; }
+    body.theme-light .sidebar-pane { background: rgba(248, 250, 255, 0.8); }
+
+    .search-strip { padding: 12px 12px 6px; }
+    .search-strip input { width: 100%; border-radius: 14px; }
+    .filter-pills { padding: 6px 12px 10px; display: flex; gap: 6px; overflow-x: auto; border-bottom: 1px solid var(--border); }
+    .pill { padding: 5px 11px; border-radius: 999px; font-size: 11.5px; white-space: nowrap; }
+    .pill.active { background: var(--primary-grad); color: #fff; border-color: transparent; }
+
+    .threads-list { flex: 1; overflow-y: auto; padding: 9px; display: flex; flex-direction: column; gap: 7px; }
+    .thread-card {
+      padding: 11px 12px; border-radius: 16px; background: var(--surface-2); border: 1px solid transparent;
+      display: flex; align-items: center; justify-content: space-between; gap: 9px; cursor: pointer; transition: 0.18s ease;
+    }
+    .thread-card:hover { border-color: var(--border-strong); }
+    .thread-card.active {
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.25), rgba(168, 85, 247, 0.18));
+      border-color: var(--primary);
+    }
+    .thread-left { display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0; }
+    .thread-meta { flex: 1; min-width: 0; }
+    .thread-name { font-size: 13.5px; font-weight: 800; display: flex; align-items: center; gap: 5px; }
+    .thread-preview { font-size: 11.5px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+    .room-pane {
+      display: flex; flex-direction: column; overflow: hidden;
+      background-image: url("data:image/svg+xml,%3Csvg width='120' height='120' viewBox='0 0 120 120' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%238b5cf6' stroke-opacity='0.06' stroke-width='1.5'%3E%3Cpath d='M20 25l15-7 15 7-15 7-15-7zm5 4v7c0 3 4.5 5 10 5s10-2 10-5v-7'/%3E%3Ccircle cx='88' cy='32' r='10'/%3E%3Cpath d='M83 32h10M88 27v10'/%3E%3Crect x='22' y='75' width='22' height='16' rx='3'/%3E%3C/g%3E%3C/svg%3E");
+    }
+    .room-head { padding: 11px 16px; border-bottom: 1px solid var(--border); background: var(--surface); display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+    .mobile-back { display: none; }
+
+    .call-bar { display: none; padding: 9px 16px; background: var(--surface-3); border-bottom: 1px solid var(--border-strong); align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; font-size: 12.5px; }
+    .call-bar.show { display: flex; }
+    #remoteCallVideo, #localCallVideo { background:#08080b; }
+    #rtcMediaWrap video { background:#08080b; }
+    @media (max-width:600px) { #rtcMediaWrap { width:100% !important; } }
+
+    .msgs-area { flex: 1; overflow-y: auto; padding: 15px 18px; display: flex; flex-direction: column; gap: 11px; }
+    .msg-bubble { max-width: 78%; padding: 11px 14px; border-radius: 18px; background: var(--surface-2); border: 1px solid var(--border); display: flex; flex-direction: column; gap: 6px; box-shadow: 0 4px 14px rgba(0,0,0,0.14); }
+    .msg-bubble.mine { align-self: flex-start; background: var(--primary-grad); color: #fff; border-color: transparent; border-bottom-right-radius: 5px; }
+    .msg-bubble.theirs { align-self: flex-end; border-bottom-left-radius: 5px; }
+    .msg-bubble.saved { box-shadow: 0 0 0 2px var(--saved); }
+    .msg-head { display: flex; justify-content: space-between; gap: 10px; font-size: 11px; opacity: 0.85; }
+    .msg-text { font-size: 13.5px; line-height: 1.55; white-space: pre-wrap; word-break: break-word; }
+    .msg-img { max-width: 250px; border-radius: 12px; }
+
+    .voice-player { display: flex; align-items: center; gap: 9px; padding: 6px 9px; border-radius: 12px; background: rgba(0,0,0,0.22); min-width: 215px; }
+    .voice-play-btn { width: 32px; height: 32px; border-radius: 50%; padding: 0; background: #fff; color: var(--primary); border: none; flex-shrink: 0; }
+    .waveform-bars { display: flex; align-items: center; gap: 3px; height: 22px; flex: 1; }
+    .waveform-bars span { display: block; width: 3px; border-radius: 3px; background: currentColor; opacity: 0.78; }
+
+    .lesson-share-box { border-radius: 13px; overflow: hidden; background: var(--surface-solid); color: var(--text); border: 1px solid var(--border); max-width: 270px; }
+    .lesson-share-box img { width: 100%; height: 115px; object-fit: cover; display: block; }
+    .msg-foot { display: flex; justify-content: space-between; align-items: center; gap: 6px; flex-wrap: wrap; }
+    .msg-bubble.mine .msg-foot button { background: rgba(255,255,255,0.18); color: #fff; border-color: rgba(255,255,255,0.25); }
+
+    .composer { padding: 11px 15px; border-top: 1px solid var(--border); background: var(--surface); display: flex; flex-wrap: wrap; gap: 7px; align-items: center; }
+    .composer input[type="text"] { flex: 1; min-width: 140px; border-radius: 999px; padding: 10px 15px; }
+
+    /* =========================================================================
+       الدروس السحابية والبحث التقريبي
+       ========================================================================= */
+    .lessons-grid { flex: 1; display: grid; grid-template-columns: 350px 1fr; overflow: hidden; }
+    .lessons-side { border-inline-end: 1px solid var(--border); background: rgba(8, 7, 20, 0.45); padding: 13px; display: flex; flex-direction: column; gap: 10px; overflow-y: auto; }
+    body.theme-light .lessons-side { background: rgba(248, 250, 255, 0.8); }
+
+    .lesson-hero-banner {
+      border-radius: 18px; padding: 15px;
+      background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 55%, #c026d3 100%);
+      color: #fff; display: flex; flex-direction: column; gap: 4px; box-shadow: var(--primary-glow);
+    }
+    .lesson-card { border-radius: 15px; background: var(--surface-2); border: 1px solid var(--border); overflow: hidden; cursor: pointer; }
+    .lesson-card.active { border-color: var(--primary); box-shadow: 0 0 0 2px var(--accent-soft); }
+    .lesson-card img { width: 100%; height: 104px; object-fit: cover; display: block; }
+    .lesson-card-body { padding: 9px 11px; display: flex; flex-direction: column; gap: 4px; }
+
+    .lesson-stage { display: flex; flex-direction: column; overflow: hidden; }
+    .stage-top { padding: 10px 15px; border-bottom: 1px solid var(--border); background: var(--surface); display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+    .stage-frame { flex: 1; width: 100%; border: none; background: #fff; }
+    .lesson-stage.fullscreen { position: fixed; inset: 0; z-index: 500; background: var(--bg-base); width: 100vw; height: 100dvh; }
+    .lesson-stage.fullscreen .stage-frame { min-height: 0; height: calc(100dvh - 62px); }
+    body.lesson-fullscreen { overflow: hidden; }
+
+    /* الكاميرا */
+    .cam-wrap { flex: 1; padding: 18px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; overflow-y: auto; }
+    .cam-box { width: 100%; max-width: 460px; aspect-ratio: 4 / 3; border-radius: 22px; background: var(--surface-2); border: 2px solid var(--border-strong); overflow: hidden; display: grid; place-items: center; }
+    .cam-box video, .cam-box img { width: 100%; height: 100%; object-fit: cover; }
+
+    /* شريط التنقل السفلي للهاتف */
+    .bottom-bar { display: none; padding: 7px 12px; border-top: 1px solid var(--border); background: var(--surface-solid); justify-content: space-around; align-items: center; }
+    .b-btn { background: transparent; border: none; color: var(--muted); flex-direction: column; gap: 2px; padding: 5px 12px; font-size: 11px; }
+    .b-btn.active { color: var(--primary); background: var(--accent-soft); }
+    .b-cam { width: 48px; height: 48px; border-radius: 50%; background: var(--primary-grad); color: #fff; border: none; padding: 0; box-shadow: var(--primary-glow); transform: translateY(-3px); }
+
+    @media (max-width: 920px) {
+      body { padding: 0; }
+      .app.active { grid-template-columns: 1fr; height: 100vh; min-height: 100vh; border-radius: 0; border: none; }
+      .desktop-rail { display: none; }
+      .mobile-topbar { display: flex; }
+      .bottom-bar { display: flex; }
+      .chats-grid, .lessons-grid { grid-template-columns: 1fr; }
+      .chats-grid.in-room .sidebar-pane { display: none; }
+      .chats-grid:not(.in-room) .room-pane { display: none; }
+      .mobile-back { display: inline-flex; }
+    }
+
+    /* النوافذ المنبثقة */
+    .modal-bg { display: none; position: fixed; inset: 0; background: rgba(5, 4, 14, 0.78); backdrop-filter: blur(8px); z-index: 200; align-items: center; justify-content: center; padding: 14px; }
+    .modal-bg.open { display: flex; }
+    .modal-card { width: 100%; max-width: 520px; max-height: 90vh; overflow-y: auto; background: var(--surface-solid); border: 1px solid var(--border-strong); border-radius: 22px; padding: 22px; display: flex; flex-direction: column; gap: 13px; }
+    .incoming-box { max-width: 360px; text-align: center; align-items: center; padding: 28px 20px; gap: 14px; }
+    .caller-ring { width: 100px; height: 100px; border-radius: 50%; padding: 4px; background: var(--primary-grad); display: grid; place-items: center; }
+    .caller-img { width: 100%; height: 100%; border-radius: 50%; background: var(--surface-2); overflow: hidden; display: grid; place-items: center; font-size: 30px; font-weight: 900; }
+    .caller-img img { width: 100%; height: 100%; object-fit: cover; }
+    .check-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 11px; border-radius: 11px; background: var(--surface-2); border: 1px solid var(--border); cursor: pointer; }
+  </style>
+</head>
+<body>
+  <div class="toast" id="toastBox"></div>
+
+  <!-- =======================================================================
+       شاشة الدخول / استعادة الحساب بالـ ID
+       ======================================================================= -->
+  <form class="login-card" id="loginForm">
+    <div class="brand-hero">
+      <div class="brand-emblem">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/>
+        </svg>
+      </div>
+      <h1>EduChat Cloud</h1>
+      <span class="sub-tag">متصل بالسحابة • Supabase Realtime & Storage</span>
+    </div>
+
+    <div class="auth-mode-tabs">
+      <button type="button" class="auth-mode-btn active" id="modeNewBtn">حساب جديد بالاسم</button>
+      <button type="button" class="auth-mode-btn" id="modeRecoverBtn">دخول بحساب موجود (UID)</button>
+    </div>
+
+    <div class="theme-row" id="loginThemes">
+      <button type="button" class="theme-chip active" data-theme="dark"><span class="swatch-dot" style="background:#7c3aed;"></span><span>نيلي داكن</span></button>
+      <button type="button" class="theme-chip" data-theme="light"><span class="swatch-dot" style="background:#eef2ff;"></span><span>نهاري</span></button>
+      <button type="button" class="theme-chip" data-theme="crimson"><span class="swatch-dot" style="background:#e11d48;"></span><span>عنابي</span></button>
+    </div>
+
+    <div id="newAccountFields" style="display:flex; flex-direction:column; gap:10px;">
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+        <div style="display:flex; flex-direction:column; gap:4px;">
+          <label style="font-size:11.5px; font-weight:700; color:var(--muted);">لغة التطبيق</label>
+          <select id="loginAppLangSel"></select>
+        </div>
+        <div style="display:flex; flex-direction:column; gap:4px;">
+          <label style="font-size:11.5px; font-weight:700; color:var(--muted);">لغة الدروس</label>
+          <select id="loginLessonsLangSel"></select>
+        </div>
+      </div>
+
+      <input type="text" id="loginNameInp" placeholder="اسمك الفريد (مثال: سارة)" autocomplete="off" />
+      <input type="text" id="loginMajorInp" placeholder="التخصص الدراسي (اختياري)" />
+    </div>
+
+    <div id="recoverAccountFields" style="display:none; flex-direction:column; gap:10px;">
+      <input type="text" id="recoverUidInp" placeholder="أدخل معرّفك العام (مثال: U-482731)" autocomplete="off" />
+      <p style="font-size:11.5px; color:var(--muted);">استعد جلسة حسابك المحفوظة على Supabase من أي هاتف أو كمبيوتر.</p>
+    </div>
+
+    <div class="err-box" id="loginErrBox"></div>
+    <button type="submit" class="btn-primary" id="loginSubmitBtn" style="padding:12px; font-size:14px;">دخول وحفظ على السحابة</button>
+  </form>
+
+  <!-- =======================================================================
+       التطبيق السحابي الكامل
+       ======================================================================= -->
+  <div class="app" id="appShell">
+    <aside class="desktop-rail">
+      <div class="rail-brand">
+        <div class="rail-logo">
+          <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/>
+          </svg>
+        </div>
+        <div class="rail-brand-text">
+          <strong>EduChat</strong>
+          <small>Learn • Chat • Share</small>
+        </div>
+      </div>
+
+      <div class="rail-profile">
+        <div style="display:flex; align-items:center; gap:9px; cursor:pointer;" id="openProfileDesktop">
+          <div class="avatar" id="deskAvatar">س</div>
+          <div style="min-width:0; flex:1;">
+            <strong id="deskName" style="font-size:13.5px; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;"></strong>
+            <span class="cloud-pill" id="cloudPillDesk"><span class="cloud-dot"></span><span id="cloudTextDesk">متصل بالسحابة</span></span>
+          </div>
+        </div>
+        <button type="button" id="copyIdDesktop" style="padding:5px 9px; font-size:11.5px; justify-content:space-between;">
+          <span id="deskPublicId">UID: U-000000</span>
+          <span>نسخ ID</span>
+        </button>
+      </div>
+
+      <nav class="rail-nav">
+        <button type="button" class="rail-nav-btn active" data-tab="chats" id="t_nav_chats">المحادثات</button>
+        <button type="button" class="rail-nav-btn" data-tab="camera" id="t_nav_camera">الكاميرا</button>
+        <button type="button" class="rail-nav-btn" data-tab="lessons" id="t_nav_lessons">
+          <span id="t_nav_lessons_lbl">الدروس</span>
+          <span class="rail-badge" id="deskLessonsCount">0</span>
+        </button>
+        <button type="button" class="rail-nav-btn" data-tab="settings" id="t_nav_settings">الإعدادات</button>
+      </nav>
+
+      <div style="display:flex; flex-direction:column; gap:6px;">
+        <button type="button" id="deskCreateGroupBtn">+ إنشاء جروب خاص</button>
+        <button type="button" id="deskAddLessonBtn" class="btn-primary">+ إضافة درس سحابي</button>
+      </div>
+
+      <div style="margin-top:auto; display:flex; flex-direction:column; gap:6px;">
+        <button type="button" id="deskCycleThemeBtn">تبديل المظهر</button>
+        <button type="button" id="deskLogoutBtn" class="btn-danger">خروج</button>
+      </div>
+    </aside>
+
+    <div class="main-stage">
+      <header class="mobile-topbar">
+        <div style="display:flex; align-items:center; gap:6px;">
+          <button type="button" id="openProfileMobile" style="padding:3px 8px 3px 4px; border-radius:999px;">
+            <div class="avatar" id="mobAvatar" style="width:28px; height:28px; font-size:11px;"></div>
+            <span id="mobName" style="font-size:11.5px;"></span>
+          </button>
+          <button type="button" id="copyIdMobile" style="padding:5px 8px; font-size:10.5px;">
+            <span id="mobPublicId">U-000000</span>
+          </button>
+        </div>
+        <div style="display:flex; gap:5px;">
+          <button type="button" id="mobCreateGroupBtn" style="padding:6px 8px; font-size:11px;">+ جروب</button>
+          <button type="button" id="mobAddLessonBtn" class="btn-primary" style="padding:6px 8px; font-size:11px;">+ درس</button>
+          <button type="button" id="mobCycleThemeBtn" style="padding:6px 8px; font-size:11px;">ثيم</button>
+        </div>
+      </header>
+
+      <div class="content-wrap">
+        <!-- 1. المحادثات -->
+        <section class="tab-pane active" id="paneChats">
+          <div class="chats-grid" id="chatsGrid">
+            <aside class="sidebar-pane">
+              <div class="search-strip" style="display:flex; gap:7px; align-items:center;">
+                <input type="search" id="chatSearchInput" placeholder="ابحث عن مستخدم لإرسال طلب تواصل..." />
+                <button type="button" id="contactRequestsBtn" style="white-space:nowrap;">طلبات</button>
+              </div>
+              <div class="filter-pills">
+                <button type="button" class="pill active" data-cfilter="all" id="t_f_all">الكل</button>
+                <button type="button" class="pill" data-cfilter="friends" id="t_f_friends">الأصدقاء</button>
+                <button type="button" class="pill" data-cfilter="groups" id="t_f_groups">الجروبات</button>
+                <button type="button" class="pill" data-cfilter="saved" id="t_f_saved">المثبتة</button>
+              </div>
+              <div class="threads-list" id="threadsList"></div>
+            </aside>
+
+            <div class="room-pane">
+              <div class="room-head">
+                <div style="display:flex; align-items:center; gap:9px;">
+                  <button type="button" class="mobile-back" id="mobileBackBtn">رجوع</button>
+                  <div class="avatar" id="roomAvatar">ع</div>
+                  <div>
+                    <strong id="roomTitle" style="font-size:14px;">المحادثة</strong>
+                    <p id="roomSub" style="font-size:11px; color:var(--muted);"></p>
+                  </div>
+                </div>
+                <div style="display:flex; gap:5px; flex-wrap:wrap;">
+                  <button type="button" id="inChatAudioBtn" class="btn-primary">صوتي</button>
+                  <button type="button" id="inChatVideoBtn">فيديو</button>
+                  <button type="button" id="simIncomingBtn">رنين وارد</button>
+                  <button type="button" id="refreshMsgsBtn">تحديث</button>
+                </div>
+              </div>
+
+              <div class="call-bar" id="callBar">
+                <strong id="callBarText"></strong>
+                <div id="rtcMediaWrap" style="display:none;position:relative;width:min(100%,480px);aspect-ratio:16/9;background:#09090b;border-radius:14px;overflow:hidden;margin:6px auto;">
+                  <video id="remoteCallVideo" autoplay playsinline style="width:100%;height:100%;object-fit:contain;display:none;"></video>
+                  <video id="localCallVideo" autoplay playsinline muted style="position:absolute;right:8px;bottom:8px;width:28%;max-height:32%;object-fit:cover;border:1px solid #ffffff55;border-radius:10px;display:none;"></video>
+                  <audio id="remoteCallAudio" autoplay></audio>
+                </div>
+                <div style="display:flex; gap:6px;">
+                  <button type="button" id="muteMicBtn">كتم</button>
+                  <button type="button" id="endCallBtn" class="btn-danger">إنهاء</button>
+                </div>
+              </div>
+
+              <div class="msgs-area" id="msgsArea"></div>
+
+              <form class="composer" id="msgForm">
+                <input type="text" id="msgTextInp" placeholder="اكتب رسالتك (تُحفظ سحابياً)..." autocomplete="off" />
+                <button type="button" id="voiceRecBtn">فوكال</button>
+                <label style="cursor:pointer; background:var(--surface-2); border:1px solid var(--border); padding:8px 11px; border-radius:12px; font-size:12px; font-weight:700;">
+                  <span id="t_attach">ملف / صورة</span>
+                  <input type="file" id="msgFileInp" accept="image/*,video/*,audio/*,.pdf,.doc,.docx,.txt" style="display:none;" />
+                </label>
+                <button type="submit" class="btn-primary" style="border-radius:999px; padding:9px 15px;">إرسال</button>
+                <span id="recTag" style="display:none; color:var(--danger); font-size:12px; font-weight:800;">● تسجيل...</span>
+              </form>
+            </div>
+          </div>
+        </section>
+
+        <!-- 2. الكاميرا -->
+        <section class="tab-pane" id="paneCamera">
+          <div class="cam-wrap">
+            <h2 id="t_cam_title" style="font-size:16px; font-weight:800;">الكاميرا والتصوير</h2>
+            <div class="cam-box">
+              <video id="camVideo" autoplay playsinline muted style="display:none;"></video>
+              <img id="camImg" alt="" style="display:none;" />
+              <span id="camHint" style="color:var(--muted); font-size:12.5px; padding:16px; text-align:center;">
+                شغّل الكاميرا لالتقاط صفحة درس أو ارفع صورة لإرسالها سحابياً
+              </span>
+            </div>
+            <input type="text" id="camCaption" placeholder="تعليق مع الصورة..." style="width:100%; max-width:460px;" />
+            <div style="display:flex; gap:8px; flex-wrap:wrap; justify-content:center;">
+              <button type="button" id="openCamBtn" class="btn-primary">تشغيل الكاميرا</button>
+              <button type="button" id="takeSnapBtn">التقاط</button>
+              <label style="cursor:pointer; background:var(--surface-2); border:1px solid var(--border); padding:8px 12px; border-radius:12px; font-size:12px; font-weight:700;">
+                رفع صورة
+                <input type="file" id="camFileInp" accept="image/*" style="display:none;" />
+              </label>
+              <button type="button" id="sendSnapBtn" class="btn-success">إرسال للمحادثة</button>
+            </div>
+          </div>
+        </section>
+
+        <!-- 3. الدروس السحابية والبحث التقريبي -->
+        <section class="tab-pane" id="paneLessons">
+          <div class="lessons-grid">
+            <aside class="lessons-side">
+              <div class="lesson-hero-banner">
+                <strong style="font-size:14.5px;">مكتبة الدروس السحابية</strong>
+                <span style="font-size:11.5px; opacity:0.9;">تُحفظ دروسك على Supabase وتظهر في كل أجهزتك.</span>
+              </div>
+
+              <div style="display:flex; justify-content:space-between; align-items:center;">
+                <strong style="font-size:13px;">الدروس (<span id="lessonsNum">0</span>)</strong>
+                <button type="button" id="sideAddLessonBtn" style="padding:5px 9px; font-size:11.5px;">+ إضافة</button>
+              </div>
+
+              <select id="lessonsPaneLangSelect"></select>
+              <input type="search" id="lessonSearchInp" placeholder="بحث تقريبي في اسم الدرس ومحتواه..." />
+              <div id="lessonsList" style="display:flex; flex-direction:column; gap:9px;"></div>
+            </aside>
+
+            <div class="lesson-stage">
+              <div class="stage-top">
+                <div style="display:flex; align-items:center; gap:8px;">
+                  <img id="stageCover" alt="" style="width:36px; height:36px; border-radius:9px; object-fit:cover; border:1px solid var(--border);" />
+                  <strong id="stageTitle" style="font-size:14px;">الدرس</strong>
+                </div>
+                <div style="display:flex; gap:6px; flex-wrap:wrap;">
+                  <button type="button" id="fullscreenLessonBtn" title="عرض الدرس بملء الشاشة">⛶ شاشة كاملة</button>
+                  <button type="button" id="shareLessonBtn" class="btn-primary">مشاركة</button>
+                  <button type="button" id="openTabLessonBtn">تبويب جديد</button>
+                  <button type="button" id="deleteLessonBtn" class="btn-danger">حذف</button>
+                </div>
+              </div>
+              <iframe id="lessonFrame" class="stage-frame" sandbox="allow-scripts allow-forms"></iframe>
+            </div>
+          </div>
+        </section>
+
+        <!-- 4. الإعدادات واللغات -->
+        <section class="tab-pane" id="paneSettings" style="overflow-y:auto; padding:20px;">
+          <div style="width:100%; max-width:660px; margin:0 auto; display:flex; flex-direction:column; gap:14px;">
+            <h2 id="t_settings_title" style="font-size:18px; font-weight:900;">الإعدادات واللغات</h2>
+
+            <div style="background:var(--surface-2); border:1px solid var(--border); border-radius:16px; padding:15px; display:flex; flex-direction:column; gap:9px;">
+              <strong id="t_sec_app_lang" style="font-size:14px;">لغة واجهة التطبيق (App Language)</strong>
+              <select id="settingsAppLangSelect"></select>
+            </div>
+
+            <div style="background:var(--surface-2); border:1px solid var(--border); border-radius:16px; padding:15px; display:flex; flex-direction:column; gap:9px;">
+              <strong id="t_sec_lessons_lang" style="font-size:14px;">لغة قسم الدروس (Lessons Language)</strong>
+              <select id="settingsLessonsLangSelect"></select>
+            </div>
+
+            <div style="background:var(--surface-2); border:1px solid var(--border); border-radius:16px; padding:15px; display:flex; flex-direction:column; gap:6px;">
+              <strong style="font-size:14px;">حالة الاتصال بالسحابة (Supabase)</strong>
+              <p id="cloudDiagText" style="font-size:12px; color:var(--muted); line-height:1.6;"></p>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <nav class="bottom-bar">
+        <button type="button" class="b-btn active" data-tab="chats" id="b_chats">المحادثات</button>
+        <button type="button" class="b-cam" data-tab="camera" id="b_cam">كاميرا</button>
+        <button type="button" class="b-btn" data-tab="lessons" id="b_lessons">الدروس</button>
+        <button type="button" class="b-btn" data-tab="settings" id="b_settings">الإعدادات</button>
+      </nav>
+    </div>
+  </div>
+
+  <!-- النوافذ المنبثقة -->
+  <div class="modal-bg" id="contactRequestsModal">
+    <div class="modal-card" style="max-width:560px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;">
+        <h2 style="font-size:17px;">طلبات التواصل</h2>
+        <button type="button" id="closeContactRequestsBtn">إغلاق</button>
+      </div>
+      <div id="contactRequestsList" style="display:flex;flex-direction:column;gap:9px;"></div>
+    </div>
+  </div>
+  <div class="modal-bg" id="incomingModal">
+    <div class="modal-card incoming-box">
+      <span id="incomingCallType" style="font-size:12px; color:var(--primary); font-weight:800;">مكالمة واردة</span>
+      <div class="caller-ring"><div class="caller-img" id="callerAvatarBox"></div></div>
+      <h2 id="callerNameTxt" style="font-size:19px; font-weight:900;"></h2>
+      <div style="display:flex; gap:12px; width:100%;">
+        <button type="button" id="acceptCallBtn" class="btn-success" style="flex:1; padding:12px;">قبول</button>
+        <button type="button" id="rejectCallBtn" class="btn-danger" style="flex:1; padding:12px;">رفض</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-bg" id="profileModal">
+    <form class="modal-card" id="profileForm">
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <h2 style="font-size:16px; font-weight:800;">البروفايل السحابي</h2>
+        <button type="button" id="closeProfileBtn">إغلاق</button>
+      </div>
+      <div style="display:flex; align-items:center; gap:12px;">
+        <div class="avatar" id="profAvatarPreview" style="width:56px; height:56px;"></div>
+        <div>
+          <label style="cursor:pointer; background:var(--surface-2); border:1px solid var(--border); padding:7px 11px; border-radius:10px; font-size:12px; font-weight:700;">
+            تغيير الصورة
+            <input type="file" id="profPhotoInp" accept="image/*" style="display:none;" />
+          </label>
+          <p id="profIdText" style="font-size:11.5px; color:var(--muted); margin-top:6px;"></p>
+        </div>
+      </div>
+      <input type="text" id="profNameInp" required />
+      <input type="text" id="profMajorInp" placeholder="التخصص" />
+      <div class="err-box" id="profErr"></div>
+      <div style="display:flex; justify-content:space-between; gap:8px;">
+        <button type="button" id="logoutBtn" class="btn-danger">خروج</button>
+        <button type="submit" class="btn-primary">حفظ في السحابة</button>
+      </div>
+    </form>
+  </div>
+
+  <div class="modal-bg" id="userProfileModal"><div class="modal-card" style="max-width:620px;max-height:85vh;overflow:auto;">
+    <div style="display:flex;justify-content:space-between;align-items:center"><h2 style="font-size:16px">ملف المستخدم</h2><button type="button" id="closeUserProfileBtn">إغلاق</button></div>
+    <div style="display:flex;gap:12px;align-items:center;padding:8px 0"><div class="avatar" id="viewUserAvatar" style="width:72px;height:72px"></div><div><strong id="viewUserName"></strong><div id="viewUserId" style="font-size:12px;color:var(--muted)"></div><div id="viewUserMajor" style="font-size:12px;color:var(--muted)"></div></div></div>
+    <div id="viewUserActions" style="display:flex;gap:8px;flex-wrap:wrap"></div><h3 style="font-size:14px;margin:12px 0">الدروس التي نشرها</h3><div id="viewUserLessons" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px"></div>
+  </div></div>
+  <div class="modal-bg" id="groupModal">
+    <form class="modal-card" id="groupForm">
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <h2 style="font-size:16px; font-weight:800;">إنشاء جروب خاص</h2>
+        <button type="button" id="closeGroupBtn">إغلاق</button>
+      </div>
+      <input type="text" id="groupNameInp" placeholder="اسم الجروب" required />
+      <div id="groupMembersBox" style="display:flex; flex-direction:column; gap:6px; max-height:200px; overflow-y:auto;"></div>
+      <div class="err-box" id="groupErr"></div>
+      <div style="display:flex; justify-content:flex-end; gap:8px;">
+        <button type="button" id="cancelGroupBtn">إلغاء</button>
+        <button type="submit" class="btn-primary">إنشاء</button>
+      </div>
+    </form>
+  </div>
+
+  <div class="modal-bg" id="lessonModal">
+    <form class="modal-card" id="lessonForm">
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <h2 style="font-size:16px; font-weight:800;">إضافة درس سحابي (HTML)</h2>
+        <button type="button" id="closeLessonModalBtn">إغلاق</button>
+      </div>
+      <input type="text" id="lessonTitleInp" placeholder="عنوان الدرس" required />
+      <input type="file" id="lessonFileInp" accept=".html,.htm" />
+      <textarea id="lessonHtmlInp" style="min-height:150px; direction:ltr; text-align:left; font-family:monospace;" placeholder="<!DOCTYPE html>..." required></textarea>
+      <div style="display:flex; justify-content:flex-end; gap:8px;">
+        <button type="button" id="cancelLessonModalBtn">إلغاء</button>
+        <button type="submit" class="btn-primary">حفظ الدرس</button>
+      </div>
+    </form>
+  </div>
+
+  <div class="modal-bg" id="shareModal">
+    <div class="modal-card">
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <h2 style="font-size:16px; font-weight:800;">مشاركة الدرس</h2>
+        <button type="button" id="closeShareModalBtn">إغلاق</button>
+      </div>
+      <div class="lesson-share-box" style="max-width:100%;">
+        <img id="shareImg" alt="" />
+        <div style="padding:10px;"><strong id="shareTitle" style="font-size:13.5px;"></strong></div>
+      </div>
+      <div id="shareTargets" style="display:flex; flex-direction:column; gap:6px; max-height:200px; overflow-y:auto;"></div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+
+    // =========================================================================
+    // بيانات مشروعك على Supabase (Public URL + Publishable Key فقط)
+    // =========================================================================
+    const SUPABASE_URL = 'https://pbvkghyrwxtwjlrtiwbt.supabase.co';
+    const SUPABASE_ANON_KEY = 'sb_publishable_hvptiCMZeVjToxCtVm0AlQ_ABhhk_Qs';
+    const STORAGE_BUCKET = 'educhat-media';
+
+    const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+      auth: { persistSession: true, autoRefreshToken: true }
+    });
+
+    // =========================================================================
+    // اللغات الـ 8 (RTL للعربية و LTR لباقي اللغات)
+    // =========================================================================
+    const LANGUAGES = [
+      { code: 'ar', label: 'Arabic – العربية', dir: 'rtl' },
+      { code: 'fr', label: 'French – Français', dir: 'ltr' },
+      { code: 'en', label: 'English – English', dir: 'ltr' },
+      { code: 'es', label: 'Spanish – Español', dir: 'ltr' },
+      { code: 'de', label: 'German – Deutsch', dir: 'ltr' },
+      { code: 'tr', label: 'Turkish – Türkçe', dir: 'ltr' },
+      { code: 'it', label: 'Italian – Italiano', dir: 'ltr' },
+      { code: 'pt', label: 'Portuguese – Português', dir: 'ltr' }
+    ];
+
+    const I18N = {
+      ar: { chats: 'المحادثات', camera: 'الكاميرا', lessons: 'الدروس', settings: 'الإعدادات', send: 'إرسال', voice: 'فوكال', attach: 'ملف / صورة', share: 'مشاركة', openTab: 'تبويب جديد', del: 'حذف', searchChat: 'ابحث عن صديق، جروب، أو UID...', searchLes: 'بحث تقريبي في اسم الدرس ومحتواه...', msgPh: 'اكتب رسالتك (محفوظة سحابياً)...' },
+      en: { chats: 'Chats', camera: 'Camera', lessons: 'Lessons', settings: 'Settings', send: 'Send', voice: 'Voice', attach: 'File / Photo', share: 'Share', openTab: 'New Tab', del: 'Delete', searchChat: 'Search friend, group, or UID...', searchLes: 'Fuzzy search title & content...', msgPh: 'Type message (cloud synced)...' },
+      fr: { chats: 'Discussions', camera: 'Caméra', lessons: 'Cours', settings: 'Paramètres', send: 'Envoyer', voice: 'Vocal', attach: 'Fichier / Photo', share: 'Partager', openTab: 'Nouvel onglet', del: 'Supprimer', searchChat: 'Rechercher ami, groupe, UID...', searchLes: 'Recherche approximative...', msgPh: 'Écrire un message...' },
+      es: { chats: 'Chats', camera: 'Cámara', lessons: 'Lecciones', settings: 'Ajustes', send: 'Enviar', voice: 'Voz', attach: 'Archivo / Foto', share: 'Compartir', openTab: 'Nueva pestaña', del: 'Eliminar', searchChat: 'Buscar...', searchLes: 'Buscar lección...', msgPh: 'Escribe un mensaje...' },
+      de: { chats: 'Chats', camera: 'Kamera', lessons: 'Lektionen', settings: 'Einstellungen', send: 'Senden', voice: 'Sprache', attach: 'Datei / Foto', share: 'Teilen', openTab: 'Neuer Tab', del: 'Löschen', searchChat: 'Suchen...', searchLes: 'Lektion suchen...', msgPh: 'Nachricht schreiben...' },
+      tr: { chats: 'Sohbetler', camera: 'Kamera', lessons: 'Dersler', settings: 'Ayarlar', send: 'Gönder', voice: 'Sesli', attach: 'Dosya / Foto', share: 'Paylaş', openTab: 'Yeni Sekme', del: 'Sil', searchChat: 'Ara...', searchLes: 'Ders ara...', msgPh: 'Mesaj yaz...' },
+      it: { chats: 'Chat', camera: 'Fotocamera', lessons: 'Lezioni', settings: 'Impostazioni', send: 'Invia', voice: 'Vocale', attach: 'File / Foto', share: 'Condividi', openTab: 'Nuova scheda', del: 'Elimina', searchChat: 'Cerca...', searchLes: 'Cerca lezione...', msgPh: 'Scrivi un messaggio...' },
+      pt: { chats: 'Conversas', camera: 'Câmera', lessons: 'Aulas', settings: 'Configurações', send: 'Enviar', voice: 'Áudio', attach: 'Arquivo / Foto', share: 'Compartilhar', openTab: 'Nova aba', del: 'Excluir', searchChat: 'Buscar...', searchLes: 'Buscar aula...', msgPh: 'Digite uma mensagem...' }
+    };
+
+    const tA = (k) => (I18N[state.appLanguage] && I18N[state.appLanguage][k]) || I18N.ar[k] || k;
+    const tL = (k) => (I18N[state.lessonsLanguage] && I18N[state.lessonsLanguage][k]) || I18N.ar[k] || k;
+
+    // =========================================================================
+    // حالة التطبيق
+    // =========================================================================
+    const SESSION_KEY = 'educhat_cloud_session_pbvkghyrwxtwjlrtiwbt';
+    let state = {
+      user: null,
+      theme: 'dark',
+      appLanguage: 'ar',
+      lessonsLanguage: 'ar',
+      tab: 'chats',
+      filter: 'all',
+      chatSearch: '',
+      threadType: 'public', // 'public' | 'dm' | 'group'
+      targetId: 'general',
+      users: [],
+      contacts: [],
+      contactRequests: [],
+      searchResults: [],
+      groups: [],
+      messages: [],
+      lessons: [],
+      activeLessonId: null,
+      lessonSearch: '',
+      cloudConnected: false,
+      nicknames: JSON.parse(localStorage.getItem('educhat_nicknames') || '{}')
+    };
+
+    function toast(msg) {
+      const el = document.getElementById('toastBox');
+      el.textContent = msg;
+      el.classList.add('show');
+      clearTimeout(el._t);
+      el._t = setTimeout(() => el.classList.remove('show'), 2400);
+    }
+
+    function norm(s) {
+      return (s || '').toLowerCase().replace(/[أإآا]/g, 'ا').replace(/ى/g, 'ي').replace(/ة/g, 'ه').replace(/[^\p{L}\p{N}\s]/gu, ' ').replace(/\s+/g, ' ').trim();
+    }
+
+    function lev(a, b) {
+      const m = a.length, n = b.length;
+      if (!m) return n; if (!n) return m;
+      const dp = Array.from({ length: m + 1 }, () => new Array(n + 1).fill(0));
+      for (let i = 0; i <= m; i++) dp[i][0] = i;
+      for (let j = 0; j <= n; j++) dp[0][j] = j;
+      for (let i = 1; i <= m; i++) for (let j = 1; j <= n; j++) dp[i][j] = Math.min(dp[i - 1][j] + 1, dp[i][j - 1] + 1, dp[i - 1][j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1));
+      return dp[m][n];
+    }
+
+    function avatarSvg(letter, c1 = '#6366f1', c2 = '#a855f7') {
+      const ch = (letter || 'U').trim()[0] || 'U';
+      const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="120" height="120" viewBox="0 0 120 120"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="${c1}"/><stop offset="100%" stop-color="${c2}"/></linearGradient></defs><rect width="120" height="120" rx="60" fill="url(#g)"/><text x="50%" y="54%" dominant-baseline="middle" text-anchor="middle" fill="#fff" font-family="system-ui,sans-serif" font-size="48" font-weight="bold">${ch}</text></svg>`;
+      return 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
+    }
+
+    function lessonCoverSvg(title) {
+      const safe = (title || 'Lesson').slice(0, 32).replace(/[<>&"']/g, '');
+      const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="600" height="280" viewBox="0 0 600 280"><defs><linearGradient id="b" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#4f46e5"/><stop offset="100%" stop-color="#9333ea"/></linearGradient></defs><rect width="600" height="280" fill="url(#b)"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="#fff" font-family="system-ui,sans-serif" font-size="24" font-weight="bold">${safe}</text></svg>`;
+      return 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
+    }
+
+    function extractCover(html, title) {
+      try {
+        const doc = new DOMParser().parseFromString(html || '', 'text/html');
+        for (const img of doc.querySelectorAll('img')) {
+          const src = (img.getAttribute('src') || '').trim();
+          if (src.startsWith('http') || src.startsWith('data:image/')) return src;
+        }
+      } catch {}
+      return lessonCoverSvg(title);
+    }
+
+    function createRingtone() {
+      let ctx = null, timer = null, active = false;
+      function burst() {
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        if (!ctx) ctx = new AudioCtx();
+        if (ctx.state === 'suspended') ctx.resume();
+        const now = ctx.currentTime;
+        const o1 = ctx.createOscillator(), o2 = ctx.createOscillator(), g = ctx.createGain();
+        o1.type = o2.type = 'sine';
+        o1.frequency.setValueAtTime(440, now); o2.frequency.setValueAtTime(480, now);
+        g.gain.setValueAtTime(0.0001, now); g.gain.exponentialRampToValueAtTime(0.08, now + 0.04);
+        g.gain.setValueAtTime(0.08, now + 0.45); g.gain.exponentialRampToValueAtTime(0.0001, now + 0.56);
+        o1.connect(g); o2.connect(g); g.connect(ctx.destination);
+        o1.start(now); o2.start(now); o1.stop(now + 0.57); o2.stop(now + 0.57);
+      }
+      return {
+        start() { if (active) return; active = true; try { burst(); timer = setInterval(() => { if (active) burst(); }, 2000); } catch {} },
+        stop() { active = false; if (timer) { clearInterval(timer); timer = null; } }
+      };
+    }
+    const ringtone = createRingtone();
+
+    function setTheme(t) {
+      state.theme = t || 'dark';
+      document.body.classList.remove('theme-light', 'theme-crimson');
+      if (state.theme === 'light') document.body.classList.add('theme-light');
+      if (state.theme === 'crimson') document.body.classList.add('theme-crimson');
+      document.querySelectorAll('#loginThemes .theme-chip').forEach((c) => c.classList.toggle('active', c.dataset.theme === state.theme));
+      saveSession();
+    }
+
+    function populateLangs() {
+      ['loginAppLangSel', 'loginLessonsLangSel', 'settingsAppLangSelect', 'settingsLessonsLangSelect', 'lessonsPaneLangSelect'].forEach((id) => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        el.innerHTML = '';
+        for (const l of LANGUAGES) {
+          const o = document.createElement('option');
+          o.value = l.code; o.textContent = l.label;
+          el.appendChild(o);
+        }
+      });
+      document.getElementById('loginAppLangSel').value = state.appLanguage;
+      document.getElementById('settingsAppLangSelect').value = state.appLanguage;
+      document.getElementById('loginLessonsLangSel').value = state.lessonsLanguage;
+      document.getElementById('settingsLessonsLangSelect').value = state.lessonsLanguage;
+      document.getElementById('lessonsPaneLangSelect').value = state.lessonsLanguage;
+    }
+
+    function applyLanguages() {
+      const appObj = LANGUAGES.find((x) => x.code === state.appLanguage) || LANGUAGES[0];
+      document.documentElement.lang = appObj.code;
+      document.documentElement.dir = appObj.dir;
+
+      const lesObj = LANGUAGES.find((x) => x.code === state.lessonsLanguage) || LANGUAGES[0];
+      document.getElementById('paneLessons').setAttribute('dir', lesObj.dir);
+
+      document.getElementById('t_nav_chats').textContent = tA('chats');
+      document.getElementById('t_nav_camera').textContent = tA('camera');
+      document.getElementById('t_nav_lessons_lbl').textContent = tA('lessons');
+      document.getElementById('t_nav_settings').textContent = tA('settings');
+      document.getElementById('b_chats').textContent = tA('chats');
+      document.getElementById('b_cam').textContent = tA('camera');
+      document.getElementById('b_lessons').textContent = tA('lessons');
+      document.getElementById('b_settings').textContent = tA('settings');
+      document.getElementById('chatSearchInput').placeholder = tA('searchChat');
+      document.getElementById('msgTextInp').placeholder = tA('msgPh');
+      document.querySelector('#msgForm button[type="submit"]').textContent = tA('send');
+      document.getElementById('voiceRecBtn').textContent = tA('voice');
+      document.getElementById('t_attach').textContent = tA('attach');
+
+      document.getElementById('lessonSearchInp').placeholder = tL('searchLes');
+      document.getElementById('shareLessonBtn').textContent = tL('share');
+      document.getElementById('openTabLessonBtn').textContent = tL('openTab');
+      document.getElementById('deleteLessonBtn').textContent = tL('del');
+
+      populateLangs();
+      if (state.user) { renderChats(); renderLessons(); }
+    }
+
+    function saveSession() {
+      localStorage.setItem(SESSION_KEY, JSON.stringify({
+        user: state.user,
+        theme: state.theme,
+        appLanguage: state.appLanguage,
+        lessonsLanguage: state.lessonsLanguage,
+        groups: state.groups
+      }));
+    }
+
+    function loadSession() {
+      try {
+        const raw = localStorage.getItem(SESSION_KEY);
+        if (raw) {
+          const d = JSON.parse(raw);
+          state.user = d.user || null;
+          state.theme = d.theme || 'dark';
+          state.appLanguage = d.appLanguage || 'ar';
+          state.lessonsLanguage = d.lessonsLanguage || 'ar';
+          state.groups = Array.isArray(d.groups) ? d.groups : [];
+        }
+      } catch {}
+    }
+
+    function setCloudStatus(ok, label, diag = '') {
+      state.cloudConnected = ok;
+      const pill = document.getElementById('cloudPillDesk');
+      pill.classList.toggle('warn', !ok);
+      document.getElementById('cloudTextDesk').textContent = label;
+      if (diag) document.getElementById('cloudDiagText').textContent = diag;
+    }
+
+    // تبديل وضع الدخول (حساب جديد / استعادة بالـ UID)
+    let authMode = 'new';
+    document.getElementById('modeNewBtn').addEventListener('click', () => {
+      authMode = 'new';
+      document.getElementById('modeNewBtn').classList.add('active');
+      document.getElementById('modeRecoverBtn').classList.remove('active');
+      document.getElementById('newAccountFields').style.display = 'flex';
+      document.getElementById('recoverAccountFields').style.display = 'none';
+    });
+    document.getElementById('modeRecoverBtn').addEventListener('click', () => {
+      authMode = 'recover';
+      document.getElementById('modeRecoverBtn').classList.add('active');
+      document.getElementById('modeNewBtn').classList.remove('active');
+      document.getElementById('newAccountFields').style.display = 'none';
+      document.getElementById('recoverAccountFields').style.display = 'flex';
+    });
+
+    document.querySelectorAll('#loginThemes .theme-chip').forEach((c) => c.addEventListener('click', () => setTheme(c.dataset.theme)));
+
+    document.getElementById('loginForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const errBox = document.getElementById('loginErrBox');
+      errBox.classList.remove('show');
+      const btn = document.getElementById('loginSubmitBtn');
+      btn.disabled = true;
+
+      try {
+        if (authMode === 'recover') {
+          const uid = document.getElementById('recoverUidInp').value.trim().toUpperCase();
+          if (!uid) throw new Error('أدخل معرّف UID الصحيح');
+          const { data, error } = await supabase.from('profiles').select('*').eq('public_id', uid).maybeSingle();
+          if (error) throw error;
+          if (!data) throw new Error(`لم يتم العثور على حساب بالمعرّف ${uid}`);
+          state.user = data;
+          state.theme = data.theme || state.theme;
+          state.appLanguage = data.app_language || state.appLanguage;
+          state.lessonsLanguage = data.lessons_language || state.lessonsLanguage;
+          saveSession();
+          await enterCloudApp();
+          return;
+        }
+
+        const username = document.getElementById('loginNameInp').value.trim();
+        const major = document.getElementById('loginMajorInp').value.trim();
+        const normalized = norm(username);
+        if (!normalized) throw new Error('يرجى إدخال اسم صالح');
+
+        const { data: existing, error: checkErr } = await supabase
+          .from('profiles')
+          .select('id')
+          .eq('normalized_username', normalized)
+          .maybeSingle();
+
+        if (checkErr) throw checkErr;
+        if (existing) throw new Error(`الاسم "${username}" مستخدم بالفعل على السحابة. اختر اسماً فريداً.`);
+
+        const publicId = 'U-' + Math.floor(100000 + Math.random() * 900000);
+        const { data: created, error: insErr } = await supabase
+          .from('profiles')
+          .insert({
+            public_id: publicId,
+            username,
+            normalized_username: normalized,
+            major,
+            theme: state.theme,
+            app_language: document.getElementById('loginAppLangSel').value,
+            lessons_language: document.getElementById('loginLessonsLangSel').value
+          })
+          .select()
+          .single();
+
+        if (insErr) throw insErr;
+
+        state.user = created;
+        state.appLanguage = created.app_language;
+        state.lessonsLanguage = created.lessons_language;
+        saveSession();
+        await enterCloudApp();
+      } catch (err) {
+        errBox.textContent = err.message || 'تعذر الاتصال بـ Supabase. تأكد من تنفيذ كود SQL في مشروعك.';
+        errBox.classList.add('show');
+      } finally {
+        btn.disabled = false;
+      }
+    });
+
+    // =========================================================================
+    // مزامنة السحابة (Profiles, Messages, Lessons, Storage, Realtime)
+    // =========================================================================
+    function activeThreadKey() {
+      if (!state.user) return 'general_room';
+      if (state.threadType === 'public') return 'general_room';
+      if (state.threadType === 'group') return 'grp_' + state.targetId;
+      return 'dm_' + [state.user.public_id, state.targetId].sort().join('__');
+    }
+
+    async function fetchCloudUsers() {
+      const requestUids = state.contactRequests.map(r => r.sender_uid === state.user?.public_id ? r.receiver_uid : r.sender_uid);
+      const uids = [...new Set([state.user?.public_id, ...state.contacts.map(c => c.user_a === state.user?.public_id ? c.user_b : c.user_a), ...requestUids].filter(Boolean))];
+      if (!uids.length) { state.users = []; return; }
+      const { data, error } = await supabase.from('profiles').select('public_id,username,major,avatar_url,updated_at').in('public_id',uids);
+      if (!error && data) state.users = data;
+    }
+    async function searchProfiles(q) {
+      const term=(q||'').trim();
+      if(term.length<2){state.searchResults=[];renderThreads();return;}
+      const safe=term.replace(/[%,]/g,'');
+      const {data,error}=await supabase.from('profiles').select('public_id,username,major,avatar_url').or(`username.ilike.%${safe}%,public_id.ilike.%${safe}%`).limit(20);
+      if(!error){state.searchResults=(data||[]).filter(u=>u.public_id!==state.user?.public_id);renderThreads();}
+    }
+    async function fetchContactsAndRequests() {
+      const uid = state.user?.public_id;
+      if (!uid) return;
+      const [cRes, rRes] = await Promise.all([
+        supabase.from('user_contacts').select('*').or(`user_a.eq.${uid},user_b.eq.${uid}`),
+        supabase.from('contact_requests').select('*').or(`sender_uid.eq.${uid},receiver_uid.eq.${uid}`).order('created_at', { ascending: false })
+      ]);
+      if (cRes.error) throw cRes.error;
+      if (rRes.error) throw rRes.error;
+      state.contacts = cRes.data || []; state.contactRequests = rRes.data || [];
+    }
+    function isContact(uid) { return state.contacts.some(c => c.user_a === uid || c.user_b === uid); }
+    function getContactRequest(uid) { return state.contactRequests.find(r => (r.sender_uid === uid && r.receiver_uid === state.user?.public_id) || (r.sender_uid === state.user?.public_id && r.receiver_uid === uid)); }
+    async function sendContactRequest(uid) {
+      if (!uid || uid === state.user.public_id || isContact(uid)) return;
+      if (getContactRequest(uid)) { toast('طلب التواصل موجود بالفعل'); return; }
+      const { error } = await supabase.from('contact_requests').insert({sender_uid:state.user.public_id,receiver_uid:uid,status:'pending'});
+      if (error) { toast(error.message || 'تعذر إرسال الطلب'); return; }
+      await fetchContactsAndRequests(); renderThreads(); toast('تم إرسال طلب التواصل');
+    }
+    async function acceptContactRequest(req) {
+      const [a,b] = [state.user.public_id,req.sender_uid].sort();
+      const { error: ce } = await supabase.from('user_contacts').insert({user_a:a,user_b:b});
+      if (ce && !/duplicate|unique/i.test(ce.message || '')) { toast(ce.message || 'تعذر قبول الطلب'); return; }
+      const { error } = await supabase.from('contact_requests').update({status:'accepted'}).eq('id',req.id);
+      if (error) { toast(error.message || 'تعذر تحديث الطلب'); return; }
+      await fetchContactsAndRequests(); renderThreads(); renderContactRequests(); toast('تم قبول الطلب');
+    }
+    async function rejectContactRequest(id) {
+      const { error } = await supabase.from('contact_requests').update({status:'rejected'}).eq('id',id);
+      if (error) toast(error.message || 'تعذر رفض الطلب'); else { await fetchContactsAndRequests(); renderContactRequests(); toast('تم رفض الطلب'); }
+    }
+    function renderContactRequests() {
+      const list=document.getElementById('contactRequestsList'); list.innerHTML='';
+      const incoming=state.contactRequests.filter(r=>r.receiver_uid===state.user?.public_id&&r.status==='pending');
+      const outgoing=state.contactRequests.filter(r=>r.sender_uid===state.user?.public_id&&r.status==='pending');
+      if(!incoming.length&&!outgoing.length){list.textContent='لا توجد طلبات حالياً.';return;}
+      incoming.forEach(req=>{
+        const u=state.users.find(x=>x.public_id===req.sender_uid);
+        const row=document.createElement('div');row.style.cssText='display:flex;justify-content:space-between;align-items:center;gap:8px;padding:10px;border:1px solid var(--border);border-radius:12px;';
+        const name=document.createElement('span');name.textContent=(u?.username||req.sender_uid)+' • '+req.sender_uid;
+        const actions=document.createElement('div');actions.style.cssText='display:flex;gap:6px;';
+        const yes=document.createElement('button');yes.className='btn-success';yes.textContent='قبول';yes.onclick=()=>acceptContactRequest(req);
+        const no=document.createElement('button');no.className='btn-danger';no.textContent='رفض';no.onclick=()=>rejectContactRequest(req.id);
+        actions.append(yes,no);row.append(name,actions);list.append(row);
+      });
+      outgoing.forEach(req=>{const p=document.createElement('p');p.style.cssText='font-size:12px;color:var(--muted);';p.textContent='طلب مرسل إلى '+req.receiver_uid+' — بانتظار القبول';list.append(p);});
+    }
+
+    async function fetchCloudMessages() {
+      const key = activeThreadKey();
+      const { data, error } = await supabase
+        .from('messages')
+        .select('*')
+        .eq('thread_key', key)
+        .order('created_at', { ascending: true });
+      if (error) throw error;
+      state.messages = data || [];
+      renderMessages();
+    }
+
+    async function fetchCloudLessons() {
+      const { data, error } = await supabase
+        .from('lessons')
+        .select('*')
+        .order('created_at', { ascending: true });
+      if (error) throw error;
+      state.lessons = data || [];
+      if (!state.activeLessonId && state.lessons.length) state.activeLessonId = state.lessons[0].id;
+      renderLessons();
+    }
+
+    let realtimeChannel = null;
+    function initRealtime() {
+      if (realtimeChannel) supabase.removeChannel(realtimeChannel);
+      realtimeChannel = supabase
+        .channel('educhat-cloud-live')
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'messages' }, () => {
+          fetchCloudMessages().catch(() => {});
+        })
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'lessons' }, () => {
+          fetchCloudLessons().catch(() => {});
+        })
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'contact_requests' }, () => { fetchContactsAndRequests().then(() => {renderThreads();renderContactRequests();}).catch(() => {}); })
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'user_contacts' }, () => { fetchContactsAndRequests().then(renderThreads).catch(() => {}); })
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'profiles' }, () => {
+          fetchCloudUsers().then(() => renderThreads()).catch(() => {});
+        })
+        .subscribe((status) => {
+          if (status === 'SUBSCRIBED') {
+            setCloudStatus(true, 'متصل بالسحابة (Realtime)', `متصل بمشروع Supabase: ${SUPABASE_URL}`);
+          }
+        });
+    }
+
+    async function enterCloudApp() {
+      setTheme(state.theme);
+      populateLangs();
+      applyLanguages();
+
+      document.getElementById('loginForm').style.display = 'none';
+      document.getElementById('appShell').classList.add('active');
+
+      const u = state.user;
+      const av = u.avatar_url || avatarSvg(u.username);
+      document.getElementById('deskName').textContent = u.username;
+      document.getElementById('deskAvatar').innerHTML = `<img src="${av}" alt=""/>`;
+      document.getElementById('deskPublicId').textContent = `UID: ${u.public_id}`;
+      document.getElementById('mobName').textContent = u.username;
+      document.getElementById('mobAvatar').innerHTML = `<img src="${av}" alt=""/>`;
+      document.getElementById('mobPublicId').textContent = u.public_id;
+
+      try {
+        await fetchContactsAndRequests();
+        await Promise.all([fetchCloudUsers(), fetchCloudMessages(), fetchCloudLessons()]);
+        setCloudStatus(true, 'متصل بالسحابة', `متصل فعلياً بقاعدة بيانات Supabase (${SUPABASE_URL})`);
+        initRealtime();
+        initCallSignals().catch(err => toast('تعذر تهيئة المكالمات: '+(err.message||'')));
+      } catch (err) {
+        setCloudStatus(false, 'تحقق من الجداول', `تعذر قراءة الجداول: ${err.message}. تأكد من تشغيل SQL في Supabase.`);
+      }
+      renderChats();
+    }
+
+    // رفع الملفات إلى Supabase Storage (مع بديل DataURL إذا لم يُنشأ Bucket بعد)
+    async function uploadToStorage(fileOrBlob, ext = 'bin') {
+      const filePath = `${state.user.public_id}/${Date.now()}_${Math.random().toString(36).slice(2, 6)}.${ext}`;
+      const { error } = await supabase.storage.from(STORAGE_BUCKET).upload(filePath, fileOrBlob, { upsert: false });
+      if (!error) {
+        const { data } = supabase.storage.from(STORAGE_BUCKET).getPublicUrl(filePath);
+        return data.publicUrl;
+      }
+      // بديل احتياطي إذا لم يكن Bucket educhat-media مُنشأ بعد
+      return await new Promise((resolve) => {
+        const r = new FileReader();
+        r.onload = () => resolve(String(r.result));
+        r.readAsDataURL(fileOrBlob);
+      });
+    }
+
+    async function sendCloudMessage({ msgType, content, fileName = '' }) {
+      if (state.threadType === 'dm' && !isContact(state.targetId)) throw new Error('يجب قبول طلب التواصل قبل المراسلة');
+      const { error } = await supabase.from('messages').insert({
+        thread_key: activeThreadKey(),
+        sender_name: state.user.username,
+        sender_public_id: state.user.public_id,
+        msg_type: msgType,
+        content,
+        file_name: fileName,
+        is_saved: true
+      });
+      if (error) throw error;
+      await fetchCloudMessages();
+    }
+
+    // أحداث المحادثة
+    function getPeerMeta() {
+      if (state.threadType === 'public') {
+        return { name: 'الغرفة الدراسية العامة', sub: 'متزامنة لحظياً عبر Supabase Realtime', avatar: avatarSvg('ع', '#6366f1', '#a855f7') };
+      }
+      if (state.threadType === 'group') {
+        const g = state.groups.find((x) => x.id === state.targetId);
+        return g ? { name: g.name, sub: `جروب خاص (${g.memberUids.length} أعضاء)`, avatar: avatarSvg(g.name, '#7c3aed', '#ec4899') } : null;
+      }
+      const friend = state.users.find((x) => x.public_id === state.targetId);
+      return friend
+        ? { name: friend.username, sub: `${friend.major || 'طالب'} • ${friend.public_id}`, avatar: friend.avatar_url || avatarSvg(friend.username) }
+        : { name: state.targetId, sub: state.targetId, avatar: avatarSvg('ص') };
+    }
+
+    function renderThreads() {
+      const list = document.getElementById('threadsList');
+      list.innerHTML = '';
+      const q = norm(state.chatSearch);
+
+      const items = [
+        { type: 'public', id: 'general', name: 'الغرفة الدراسية العامة', sub: 'تواصل فوري بين الجميع', avatar: avatarSvg('ع', '#6366f1', '#a855f7') },
+        ...state.groups
+          .filter((g) => g.memberUids.includes(state.user?.public_id))
+          .map((g) => ({ type: 'group', id: g.id, name: `${g.name} (${g.memberUids.length})`, sub: 'جروب خاص', avatar: avatarSvg(g.name, '#7c3aed', '#ec4899') })),
+        ...state.contacts
+          .map(c => c.user_a === state.user?.public_id ? c.user_b : c.user_a)
+          .map(uid => state.users.find(u => u.public_id === uid)).filter(Boolean)
+          .map(u => ({ type: 'dm', id: u.public_id, name: localDisplayName(u.public_id,u.username), sub: `${u.public_id} • ${u.major || 'طالب'}`, avatar: u.avatar_url || avatarSvg(u.username) }))
+      ];
+      if (q) items.push(...state.searchResults.filter(u => u.public_id !== state.user?.public_id && !isContact(u.public_id)).map(u => { const r=getContactRequest(u.public_id); const tag=r ? (r.status==='pending' ? 'طلب معلّق' : 'طلب سابق') : 'إرسال طلب تواصل'; return {type:'discover',id:u.public_id,name:u.username,sub:`${u.public_id} • ${tag}`,avatar:u.avatar_url||avatarSvg(u.username)}; }));
+
+      let filtered = items;
+      if (state.filter === 'friends') filtered = items.filter((x) => x.type === 'dm');
+      if (state.filter === 'groups') filtered = items.filter((x) => x.type === 'group');
+      if (q) filtered = filtered.filter((x) => norm(x.name).includes(q) || norm(x.sub).includes(q));
+
+      for (const it of filtered) {
+        const active = state.threadType === it.type && state.targetId === it.id;
+        const card = document.createElement('div');
+        card.className = `thread-card ${active ? 'active' : ''}`;
+        card.innerHTML = `<div class="thread-left"><div class="avatar"><img src="${it.avatar}" alt=""/></div><div class="thread-meta"><div class="thread-name"></div><div class="thread-preview"></div></div></div>`;
+        card.querySelector('.thread-name').textContent = it.name; card.querySelector('.thread-preview').textContent = it.sub;
+        if (it.type === 'dm' || it.type === 'discover') { const profileQuick=document.createElement('button'); profileQuick.type='button'; profileQuick.textContent='الملف'; profileQuick.style.cssText='font-size:11px;padding:4px 7px;margin-inline-start:5px;'; profileQuick.onclick=(ev)=>{ev.stopPropagation();openUserProfile(it.id);}; card.appendChild(profileQuick); }
+        card.addEventListener('click', async () => {
+          if (it.type === 'discover') { await sendContactRequest(it.id); return; }
+          state.threadType = it.type;
+          state.targetId = it.id;
+          document.getElementById('chatsGrid').classList.add('in-room');
+          renderThreads();
+          await fetchCloudMessages().catch(() => {});
+        });
+        list.appendChild(card);
+      }
+    }
+
+    function renderMessages() {
+      const peer = getPeerMeta();
+      if (peer) {
+        document.getElementById('roomAvatar').innerHTML = `<img src="${peer.avatar}" alt=""/>`;
+        document.getElementById('roomTitle').textContent = peer.name;
+        document.getElementById('roomSub').textContent = peer.sub;
+      }
+
+      const area = document.getElementById('msgsArea');
+      area.innerHTML = '';
+      for (const m of state.messages) {
+        const mine = m.sender_public_id === state.user?.public_id;
+        const b = document.createElement('div');
+        b.className = `msg-bubble ${mine ? 'mine' : 'theirs'} ${m.is_saved ? 'saved' : ''}`;
+        const tm = new Date(m.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        b.innerHTML = `<div class="msg-head"><button type="button" class="msg-profile-open" style="padding:0;border:0;background:none;color:inherit;cursor:pointer;font-weight:800"></button><span>${tm}</span></div>`; b.querySelector('.msg-profile-open').textContent = m.sender_name + ' (' + m.sender_public_id + ')'; b.querySelector('.msg-profile-open').addEventListener('click',()=>openUserProfile(m.sender_public_id));
+
+        if (m.msg_type === 'text') {
+          const d = document.createElement('div'); d.className = 'msg-text'; d.textContent = m.content; b.appendChild(d);
+        } else if (m.msg_type === 'photo') {
+          const img = document.createElement('img'); img.className = 'msg-img'; img.src = m.content; b.appendChild(img);
+        } else if (m.msg_type === 'voice') {
+          const aud = document.createElement('audio'); aud.controls = true; aud.src = m.content; aud.style.maxWidth = '230px'; b.appendChild(aud);
+        } else if (m.msg_type === 'lesson_share') {
+          const box = document.createElement('div'); box.className = 'lesson-share-box';
+          box.innerHTML = `<img src="${lessonCoverSvg(m.file_name)}" alt=""/><div style="padding:9px;"><strong style="font-size:13px;">${m.file_name}</strong><br/><button type="button" class="btn-primary" style="margin-top:6px; padding:5px 10px; font-size:11.5px;">فتح الدرس</button></div>`;
+          box.querySelector('button').addEventListener('click', () => { state.activeLessonId = m.content; switchTab('lessons'); });
+          b.appendChild(box);
+        } else {
+          const a = document.createElement('a'); a.href = m.content; a.target = '_blank'; a.rel = 'noopener'; a.textContent = `📎 ${m.file_name || 'ملف مرفق'}`; a.style.color = 'inherit'; b.appendChild(a);
+        }
+
+        if (mine) {
+          const foot = document.createElement('div'); foot.className = 'msg-foot';
+          const delBtn = document.createElement('button'); delBtn.type = 'button'; delBtn.style.padding = '2px 8px'; delBtn.style.fontSize = '11px'; delBtn.textContent = tA('del');
+          delBtn.addEventListener('click', async () => {
+            await supabase.from('messages').delete().eq('id', m.id);
+            await fetchCloudMessages();
+          });
+          foot.appendChild(delBtn); b.appendChild(foot);
+        }
+        area.appendChild(b);
+      }
+      area.scrollTop = area.scrollHeight;
+    }
+
+    function localDisplayName(uid, fallback){return state.nicknames?.[uid] || fallback || uid;}
+    async function openUserProfile(uid){
+      let u=state.users.find(x=>x.public_id===uid); if(!u){const {data}=await supabase.from('profiles').select('*').eq('public_id',uid).maybeSingle();u=data;}
+      if(!u){toast('لم يتم العثور على الحساب');return;}
+      document.getElementById('viewUserAvatar').innerHTML=`<img src="${u.avatar_url||avatarSvg(u.username)}" alt=""/>`;
+      document.getElementById('viewUserName').textContent=localDisplayName(uid,u.username);document.getElementById('viewUserId').textContent='UID: '+uid;document.getElementById('viewUserMajor').textContent=u.major||'بدون تخصص';
+      const actions=document.getElementById('viewUserActions');actions.innerHTML=''; if(uid!==state.user.public_id){const rename=document.createElement('button');rename.textContent='تغيير الاسم عندي';rename.onclick=()=>{const val=prompt('اسم هذا الشخص الذي يظهر لك فقط:',state.nicknames[uid]||u.username);if(val!==null){if(val.trim())state.nicknames[uid]=val.trim();else delete state.nicknames[uid];localStorage.setItem('educhat_nicknames',JSON.stringify(state.nicknames));document.getElementById('viewUserName').textContent=localDisplayName(uid,u.username);renderThreads();}};actions.appendChild(rename);const chat=document.createElement('button');chat.className='btn-primary';chat.textContent=isContact(uid)?'فتح المحادثة':'طلب تواصل';chat.onclick=async()=>{document.getElementById('userProfileModal').classList.remove('open');if(isContact(uid)){state.threadType='dm';state.targetId=uid;document.getElementById('chatsGrid').classList.add('in-room');renderThreads();await fetchCloudMessages();}else await sendContactRequest(uid);};actions.appendChild(chat);}
+      const box=document.getElementById('viewUserLessons');box.innerHTML='';const {data,error}=await supabase.from('lessons').select('id,title,language,cover_url,html_content,owner_uid,created_at').eq('owner_uid',uid).order('created_at',{ascending:false});if(error){box.textContent='تعذر تحميل الدروس';}else if(!data?.length){box.textContent='لم ينشر دروساً بعد.';}else for(const l of data){const item=document.createElement('button');item.type='button';item.style.cssText='text-align:right;border:1px solid var(--border);background:var(--surface-2);border-radius:12px;padding:8px;color:inherit;cursor:pointer';const img=document.createElement('img');img.src=l.cover_url||lessonCoverSvg(l.title);img.style.cssText='width:100%;height:90px;object-fit:cover;border-radius:8px';const title=document.createElement('strong');title.textContent=l.title;title.style.display='block';item.append(img,title);item.onclick=()=>{document.getElementById('userProfileModal').classList.remove('open');state.activeLessonId=l.id;switchTab('lessons');renderLessons();};box.appendChild(item);}
+      document.getElementById('userProfileModal').classList.add('open');
+    }
+    document.getElementById('closeUserProfileBtn').addEventListener('click',()=>document.getElementById('userProfileModal').classList.remove('open'));
+    document.getElementById('userProfileModal').addEventListener('click',e=>{if(e.target.id==='userProfileModal')e.currentTarget.classList.remove('open');});
+    function renderChats() { renderThreads(); renderMessages(); }
+
+    document.getElementById('msgForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const inp = document.getElementById('msgTextInp');
+      const txt = inp.value.trim();
+      if (!txt) return;
+      inp.value = '';
+      try { await sendCloudMessage({ msgType: 'text', content: txt }); }
+      catch (err) { toast(err.message || 'فشل الإرسال للسحابة'); }
+    });
+
+    document.getElementById('msgFileInp').addEventListener('change', async (e) => {
+      const f = e.target.files?.[0]; if (!f) return; e.target.value = '';
+      try {
+        toast('جاري الرفع إلى السحابة...');
+        const ext = (f.name.split('.').pop() || 'bin').toLowerCase();
+        const url = await uploadToStorage(f, ext);
+        const type = f.type.startsWith('image/') ? 'photo' : f.type.startsWith('audio/') ? 'voice' : 'file';
+        await sendCloudMessage({ msgType: type, content: url, fileName: f.name });
+        toast('تم الإرسال');
+      } catch (err) { toast(err.message || 'تعذر رفع الملف'); }
+    });
+
+    let rec = null, recChunks = [];
+    document.getElementById('voiceRecBtn').addEventListener('click', async () => {
+      const btn = document.getElementById('voiceRecBtn'), tag = document.getElementById('recTag');
+      if (!rec || rec.state === 'inactive') {
+        try {
+          const st = await navigator.mediaDevices.getUserMedia({ audio: true });
+          rec = new MediaRecorder(st); recChunks = [];
+          rec.ondataavailable = (ev) => { if (ev.data.size > 0) recChunks.push(ev.data); };
+          rec.onstop = async () => {
+            st.getTracks().forEach((t) => t.stop()); tag.style.display = 'none'; btn.textContent = tA('voice');
+            const blob = new Blob(recChunks, { type: 'audio/webm' });
+            const url = await uploadToStorage(blob, 'webm');
+            await sendCloudMessage({ msgType: 'voice', content: url, fileName: 'voice.webm' });
+          };
+          rec.start(); btn.textContent = '■'; tag.style.display = 'inline';
+        } catch { toast('تعذر فتح الميكروفون'); }
+      } else { rec.stop(); }
+    });
+
+    document.getElementById('refreshMsgsBtn').addEventListener('click', () => fetchCloudMessages().catch(() => {}));
+    document.getElementById('contactRequestsBtn').addEventListener('click', () => { renderContactRequests(); document.getElementById('contactRequestsModal').classList.add('open'); });
+    document.getElementById('closeContactRequestsBtn').addEventListener('click', () => document.getElementById('contactRequestsModal').classList.remove('open'));
+    document.getElementById('contactRequestsModal').addEventListener('click', e => { if (e.target.id === 'contactRequestsModal') e.currentTarget.classList.remove('open'); });
+    document.getElementById('chatSearchInput').addEventListener('input', (e) => { state.chatSearch = e.target.value; searchProfiles(e.target.value).catch(()=>{}); renderThreads(); });
+    document.querySelectorAll('[data-cfilter]').forEach((b) => b.addEventListener('click', () => {
+      state.filter = b.dataset.cfilter;
+      document.querySelectorAll('[data-cfilter]').forEach((x) => x.classList.toggle('active', x === b));
+      renderThreads();
+    }));
+    document.getElementById('mobileBackBtn').addEventListener('click', () => document.getElementById('chatsGrid').classList.remove('in-room'));
+
+    // =========================================================================
+    // الدروس السحابية والبحث التقريبي
+    // =========================================================================
+    function openLessonModal() { document.getElementById('lessonModal').classList.add('open'); }
+    document.getElementById('deskAddLessonBtn').addEventListener('click', openLessonModal);
+    document.getElementById('mobAddLessonBtn').addEventListener('click', openLessonModal);
+    document.getElementById('sideAddLessonBtn').addEventListener('click', openLessonModal);
+    document.getElementById('closeLessonModalBtn').addEventListener('click', () => document.getElementById('lessonModal').classList.remove('open'));
+    document.getElementById('cancelLessonModalBtn').addEventListener('click', () => document.getElementById('lessonModal').classList.remove('open'));
+
+    document.getElementById('lessonFileInp').addEventListener('change', (e) => {
+      const f = e.target.files?.[0]; if (!f) return;
+      const r = new FileReader();
+      r.onload = () => {
+        document.getElementById('lessonHtmlInp').value = String(r.result || '');
+        if (!document.getElementById('lessonTitleInp').value.trim()) document.getElementById('lessonTitleInp').value = f.name.replace(/\.(html|htm)$/i, '');
+      };
+      r.readAsText(f);
+    });
+
+    document.getElementById('lessonForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const title = document.getElementById('lessonTitleInp').value.trim();
+      const htmlContent = document.getElementById('lessonHtmlInp').value.trim();
+      if (!title || !htmlContent) return;
+      try {
+        const coverUrl = extractCover(htmlContent, title);
+        const { data, error } = await supabase
+          .from('lessons')
+          .insert({ title, language: state.lessonsLanguage, cover_url: coverUrl, html_content: htmlContent, owner_uid: state.user.public_id })
+          .select()
+          .single();
+        if (error) throw error;
+        state.activeLessonId = data.id;
+        document.getElementById('lessonTitleInp').value = '';
+        document.getElementById('lessonHtmlInp').value = '';
+        document.getElementById('lessonFileInp').value = '';
+        document.getElementById('lessonModal').classList.remove('open');
+        await fetchCloudLessons();
+        switchTab('lessons');
+        toast('تم حفظ الدرس على السحابة');
+      } catch (err) { toast(err.message || 'تعذر حفظ الدرس'); }
+    });
+
+    function stripHtml(h) { const d = document.createElement('div'); d.innerHTML = h || ''; return (d.textContent || '').replace(/\s+/g, ' ').trim(); }
+
+    function filteredLessons() {
+      const q = norm(state.lessonSearch);
+      if (!q) return state.lessons;
+      const toks = q.split(' ').filter(Boolean);
+      return state.lessons
+        .map((l) => {
+          const text = stripHtml(l.html_content);
+          const nt = norm(l.title), nb = norm(text);
+          const words = [...nt.split(' '), ...nb.split(' ')].filter(Boolean);
+          let score = 0;
+          if (nt.includes(q)) score += 35; else if (nb.includes(q)) score += 25;
+          for (const t of toks) {
+            if (nt.includes(t)) score += 15;
+            else if (nb.includes(t)) score += 10;
+            else if (t.length >= 2) {
+              const tol = t.length <= 4 ? 1 : 2;
+              if (words.some((w) => Math.abs(w.length - t.length) <= tol && lev(t, w) <= tol)) score += 6;
+            }
+          }
+          return { l, score };
+        })
+        .filter((x) => x.score > 0)
+        .sort((a, b) => b.score - a.score)
+        .map((x) => x.l);
+    }
+
+    const lessonStage = document.querySelector('.lesson-stage');
+    const fullscreenBtn = document.getElementById('fullscreenLessonBtn');
+    function setLessonFullscreen(enabled) {
+      lessonStage.classList.toggle('fullscreen', enabled); document.body.classList.toggle('lesson-fullscreen', enabled);
+      fullscreenBtn.textContent = enabled ? '✕ خروج من الشاشة الكاملة' : '⛶ شاشة كاملة'; fullscreenBtn.setAttribute('aria-pressed', String(enabled));
+    }
+    fullscreenBtn.addEventListener('click', () => setLessonFullscreen(!lessonStage.classList.contains('fullscreen')));
+    document.addEventListener('keydown', e => { if (e.key === 'Escape' && lessonStage.classList.contains('fullscreen')) setLessonFullscreen(false); });
+    function renderLessons() {
+      const countStr = String(state.lessons.length);
+      document.getElementById('lessonsNum').textContent = countStr;
+      document.getElementById('deskLessonsCount').textContent = countStr;
+
+      const list = document.getElementById('lessonsList');
+      list.innerHTML = '';
+      const items = filteredLessons();
+      if (!items.some((x) => x.id === state.activeLessonId) && items.length) state.activeLessonId = items[0].id;
+
+      for (const l of items) {
+        const cov = l.cover_url || extractCover(l.html_content, l.title);
+        const c = document.createElement('div');
+        c.className = `lesson-card ${l.id === state.activeLessonId ? 'active' : ''}`;
+        c.innerHTML = `<img src="${cov}" alt=""/><div class="lesson-card-body"><strong style="font-size:13px;">${l.title}</strong><span style="font-size:11px; color:var(--muted);">${stripHtml(l.html_content).slice(0, 65)}</span></div>`;
+        c.addEventListener('click', () => { state.activeLessonId = l.id; renderLessons(); });
+        list.appendChild(c);
+      }
+
+      const cur = items.find((x) => x.id === state.activeLessonId) || items[0];
+      document.getElementById('deleteLessonBtn').style.display = cur && cur.owner_uid === state.user?.public_id ? '' : 'none';
+      if (cur) {
+        document.getElementById('stageTitle').textContent = cur.title;
+        document.getElementById('stageCover').src = cur.cover_url || extractCover(cur.html_content, cur.title);
+        document.getElementById('lessonFrame').srcdoc = cur.html_content;
+      } else {
+        document.getElementById('stageTitle').textContent = 'لا توجد دروس بعد';
+        document.getElementById('lessonFrame').srcdoc = '';
+      }
+    }
+
+    document.getElementById('lessonSearchInp').addEventListener('input', (e) => { state.lessonSearch = e.target.value; renderLessons(); });
+    document.getElementById('openTabLessonBtn').addEventListener('click', () => {
+      const cur = state.lessons.find((x) => x.id === state.activeLessonId); if (!cur) return;
+      window.open(URL.createObjectURL(new Blob([cur.html_content], { type: 'text/html;charset=utf-8' })), '_blank', 'noopener');
+    });
+    document.getElementById('deleteLessonBtn').addEventListener('click', async () => {
+      const lesson=state.lessons.find(x=>x.id===state.activeLessonId);if(!lesson||lesson.owner_uid!==state.user?.public_id){toast('الحذف لصاحب الدرس فقط');return;}if(!confirm('حذف الدرس؟'))return;
+      const {error}=await supabase.from('lessons').delete().eq('id',state.activeLessonId).eq('owner_uid',state.user.public_id);if(error){toast('تعذر الحذف: '+error.message);return;}state.activeLessonId=null;await fetchCloudLessons();toast('تم حذف الدرس');
+    });
+
+    document.getElementById('shareLessonBtn').addEventListener('click', () => {
+      const cur = state.lessons.find((x) => x.id === state.activeLessonId); if (!cur) return;
+      document.getElementById('shareImg').src = cur.cover_url || extractCover(cur.html_content, cur.title);
+      document.getElementById('shareTitle').textContent = cur.title;
+      const box = document.getElementById('shareTargets'); box.innerHTML = '';
+      const targets = [
+        { type: 'public', id: 'general', label: 'الغرفة الدراسية العامة' },
+        ...state.groups.filter((g) => g.memberUids.includes(state.user.public_id)).map((g) => ({ type: 'group', id: g.id, label: `جروب: ${g.name}` })),
+        ...state.users.filter((u) => u.public_id !== state.user.public_id).map((u) => ({ type: 'dm', id: u.public_id, label: `${u.username} (${u.public_id})` }))
+      ];
+      for (const t of targets) {
+        const row = document.createElement('div'); row.className = 'check-row';
+        row.innerHTML = `<span>${t.label}</span><button type="button" class="btn-primary" style="padding:4px 10px; font-size:11.5px;">${tA('send')}</button>`;
+        row.querySelector('button').addEventListener('click', async () => {
+          state.threadType = t.type; state.targetId = t.id;
+          await sendCloudMessage({ msgType: 'lesson_share', content: cur.id, fileName: cur.title });
+          document.getElementById('shareModal').classList.remove('open');
+          switchTab('chats');
+          toast('تمت مشاركة الدرس');
+        });
+        box.appendChild(row);
+      }
+      document.getElementById('shareModal').classList.add('open');
+    });
+    document.getElementById('closeShareModalBtn').addEventListener('click', () => document.getElementById('shareModal').classList.remove('open'));
+
+    // =========================================================================
+    // البروفايل، الجروبات الخاصة، الكاميرا، والمكالمات
+    // =========================================================================
+    async function copyMyUid() {
+      if (!state.user) return;
+      try { await navigator.clipboard.writeText(state.user.public_id); } catch {}
+      toast('تم نسخ المعرّف: ' + state.user.public_id);
+    }
+    document.getElementById('copyIdDesktop').addEventListener('click', copyMyUid);
+    document.getElementById('copyIdMobile').addEventListener('click', copyMyUid);
+
+    function openProfileModal() {
+      const u = state.user; if (!u) return;
+      document.getElementById('profErr').classList.remove('show');
+      document.getElementById('profAvatarPreview').innerHTML = `<img src="${u.avatar_url || avatarSvg(u.username)}" alt=""/>`;
+      document.getElementById('profIdText').textContent = `UID: ${u.public_id}`;
+      document.getElementById('profNameInp').value = u.username;
+      document.getElementById('profMajorInp').value = u.major || '';
+      document.getElementById('profileModal').classList.add('open');
+    }
+    document.getElementById('openProfileDesktop').addEventListener('click', openProfileModal);
+    document.getElementById('openProfileMobile').addEventListener('click', openProfileModal);
+    document.getElementById('closeProfileBtn').addEventListener('click', () => document.getElementById('profileModal').classList.remove('open'));
+
+    document.getElementById('profPhotoInp').addEventListener('change',async e=>{const file=e.target.files?.[0];e.target.value='';if(!file||!state.user)return;if(!file.type.startsWith('image/')){toast('اختر صورة فقط');return;}if(file.size>5*1024*1024){toast('حد الصورة 5MB');return;}try{toast('جار رفع الصورة');const ext=(file.name.split('.').pop()||'jpg').toLowerCase();const url=await uploadToStorage(file,ext);const {data,error}=await supabase.from('profiles').update({avatar_url:url,updated_at:new Date().toISOString()}).eq('id',state.user.id).select().single();if(error)throw error;state.user=data;saveSession();await enterCloudApp();openProfileModal();toast('تم تغيير الصورة');}catch(err){toast(err.message||'تعذر تحديث الصورة');}});
+    document.getElementById('profileForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const err = document.getElementById('profErr'); err.classList.remove('show');
+      const nextName = document.getElementById('profNameInp').value.trim();
+      const nextMajor = document.getElementById('profMajorInp').value.trim();
+      const normalized = norm(nextName);
+      try {
+        const { data: dup } = await supabase.from('profiles').select('id').eq('normalized_username', normalized).neq('id', state.user.id).maybeSingle();
+        if (dup) { err.textContent = 'الاسم مستخدم من طرف شخص آخر.'; err.classList.add('show'); return; }
+        const { data: updated, error } = await supabase
+          .from('profiles')
+          .update({ username: nextName, normalized_username: normalized, major: nextMajor, updated_at: new Date().toISOString() })
+          .eq('id', state.user.id)
+          .select()
+          .single();
+        if (error) throw error;
+        state.user = updated; saveSession();
+        document.getElementById('profileModal').classList.remove('open');
+        await enterCloudApp();
+        toast('تم تحديث البروفايل سحابياً');
+      } catch (ex) { err.textContent = ex.message; err.classList.add('show'); }
+    });
+
+    function logout() {
+      ringtone.stop(); state.user = null; saveSession();
+      document.getElementById('profileModal').classList.remove('open');
+      document.getElementById('appShell').classList.remove('active');
+      document.getElementById('loginForm').style.display = 'flex';
+    }
+    document.getElementById('logoutBtn').addEventListener('click', logout);
+    document.getElementById('deskLogoutBtn').addEventListener('click', logout);
+
+    // إنشاء جروب خاص
+    function openGroupModal() {
+      document.getElementById('groupErr').classList.remove('show');
+      document.getElementById('groupNameInp').value = '';
+      const box = document.getElementById('groupMembersBox'); box.innerHTML = '';
+      for (const u of state.users.filter((x) => x.public_id !== state.user.public_id)) {
+        const lbl = document.createElement('label'); lbl.className = 'check-row';
+        lbl.innerHTML = `<span>${u.username} (${u.public_id})</span><input type="checkbox" value="${u.public_id}"/>`;
+        box.appendChild(lbl);
+      }
+      document.getElementById('groupModal').classList.add('open');
+    }
+    document.getElementById('deskCreateGroupBtn').addEventListener('click', openGroupModal);
+    document.getElementById('mobCreateGroupBtn').addEventListener('click', openGroupModal);
+    document.getElementById('closeGroupBtn').addEventListener('click', () => document.getElementById('groupModal').classList.remove('open'));
+    document.getElementById('cancelGroupBtn').addEventListener('click', () => document.getElementById('groupModal').classList.remove('open'));
+    document.getElementById('groupForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const gName = document.getElementById('groupNameInp').value.trim();
+      const picked = Array.from(document.querySelectorAll('#groupMembersBox input:checked')).map((i) => i.value);
+      if (!picked.length) { const err = document.getElementById('groupErr'); err.textContent = 'اختر صديقاً واحداً على الأقل'; err.classList.add('show'); return; }
+      const gid = 'grp_' + Date.now().toString(36);
+      state.groups.push({ id: gid, name: gName, memberUids: [state.user.public_id, ...picked] });
+      state.threadType = 'group'; state.targetId = gid;
+      saveSession();
+      document.getElementById('groupModal').classList.remove('open');
+      switchTab('chats');
+      await fetchCloudMessages();
+      toast('تم إنشاء الجروب الخاص');
+    });
+
+    // الكاميرا
+    let camSt = null, snapDataUrl = null;
+    document.getElementById('openCamBtn').addEventListener('click', async () => {
+      try {
+        camSt = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+        const v = document.getElementById('camVideo'); v.srcObject = camSt; v.style.display = 'block';
+        document.getElementById('camImg').style.display = 'none'; document.getElementById('camHint').style.display = 'none';
+      } catch { toast('تعذر تشغيل الكاميرا'); }
+    });
+    document.getElementById('takeSnapBtn').addEventListener('click', () => {
+      if (!camSt) return;
+      const v = document.getElementById('camVideo'), c = document.createElement('canvas');
+      c.width = v.videoWidth || 640; c.height = v.videoHeight || 480;
+      c.getContext('2d').drawImage(v, 0, 0, c.width, c.height);
+      snapDataUrl = c.toDataURL('image/jpeg', 0.85);
+      const img = document.getElementById('camImg'); img.src = snapDataUrl; img.style.display = 'block'; v.style.display = 'none';
+    });
+    document.getElementById('camFileInp').addEventListener('change', (e) => {
+      const f = e.target.files?.[0]; if (!f) return;
+      const r = new FileReader(); r.onload = () => { snapDataUrl = String(r.result); const img = document.getElementById('camImg'); img.src = snapDataUrl; img.style.display = 'block'; document.getElementById('camHint').style.display = 'none'; };
+      r.readAsDataURL(f);
+    });
+    document.getElementById('sendSnapBtn').addEventListener('click', async () => {
+      if (!snapDataUrl) return;
+      const blob = await (await fetch(snapDataUrl)).blob();
+      const url = await uploadToStorage(blob, 'jpg');
+      await sendCloudMessage({ msgType: 'photo', content: url, fileName: 'snap.jpg' });
+      snapDataUrl = null; switchTab('chats'); toast('تم إرسال اللقطة سحابياً');
+    });
+
+    // WebRTC calling with Supabase Realtime signaling (requires call_signals SQL table)
+    let callSt = null, micMuted = false, rtcPc = null, currentCallId = null, pendingIncoming = null;
+    let rtcSignalChannel = null, rtcSeenSignals = new Set(), bufferedIce = [];
+    const rtcRemote = new MediaStream();
+    function rtcId() { return 'call_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2,8); }
+    async function sendCallSignal(receiverUid, callId, signalType, payload) {
+      const { error } = await supabase.from('call_signals').insert({sender_uid:state.user.public_id,receiver_uid:receiverUid,call_id:callId,signal_type:signalType,payload});
+      if (error) throw error;
+    }
+    function clearRtcUi() {
+      document.getElementById('callBar').classList.remove('show');
+      document.getElementById('rtcMediaWrap').style.display='none';
+      document.getElementById('remoteCallVideo').style.display='none';
+      document.getElementById('localCallVideo').style.display='none';
+      document.getElementById('remoteCallAudio').srcObject=null;
+    }
+    async function stopRtc(sendEnd=true) {
+      const peerUid = currentCallPeer;
+      const callId = currentCallId;
+      if(sendEnd && peerUid && callId) { try { await sendCallSignal(peerUid,callId,'hangup',{}); } catch {} }
+      if(rtcPc) { rtcPc.ontrack=null; rtcPc.onicecandidate=null; rtcPc.close(); rtcPc=null; }
+      if(callSt) { callSt.getTracks().forEach(t=>t.stop()); callSt=null; }
+      currentCallId=null; currentCallPeer=null; pendingIncoming=null; bufferedIce=[]; micMuted=false;
+      ringtone.stop(); clearRtcUi();
+    }
+    let currentCallPeer = null;
+    function makeRtcPeer(peerUid, callId) {
+      rtcPc = new RTCPeerConnection({iceServers:[{urls:'stun:stun.l.google.com:19302'}]});
+      if(callSt) callSt.getTracks().forEach(t=>rtcPc.addTrack(t,callSt));
+      rtcPc.ontrack = ev => {
+        const stream=ev.streams?.[0]; if(stream) {
+          document.getElementById('remoteCallAudio').srcObject=stream;
+          if(stream.getVideoTracks().length) { const rv=document.getElementById('remoteCallVideo');rv.srcObject=stream;rv.style.display='block';document.getElementById('rtcMediaWrap').style.display='block'; }
+        } else { rtcRemote.addTrack(ev.track); document.getElementById('remoteCallAudio').srcObject=rtcRemote; }
+      };
+      rtcPc.onicecandidate = ev => { if(ev.candidate) sendCallSignal(peerUid,callId,'ice',ev.candidate.toJSON()).catch(()=>{}); };
+      rtcPc.onconnectionstatechange = () => { if(rtcPc && ['failed','disconnected'].includes(rtcPc.connectionState)) toast('انقطع الاتصال، حاول إعادة المكالمة'); };
+      const localV=document.getElementById('localCallVideo'); if(callSt?.getVideoTracks().length){localV.srcObject=callSt;localV.style.display='block';document.getElementById('rtcMediaWrap').style.display='block';}
+      return rtcPc;
+    }
+    async function startCall(video) {
+      const p=getPeerMeta(); if(!p || state.threadType!=='dm' || !isContact(state.targetId)) { toast('المكالمات متاحة بين جهات الاتصال المقبولة فقط'); return; }
+      if(!navigator.mediaDevices?.getUserMedia || !window.RTCPeerConnection) { toast('المتصفح لا يدعم WebRTC أو يجب فتح الموقع عبر HTTPS'); return; }
+      try {
+        currentCallPeer=state.targetId; currentCallId=rtcId(); callSt=await navigator.mediaDevices.getUserMedia({audio:true,video:!!video});
+        const pc=makeRtcPeer(currentCallPeer,currentCallId); const offer=await pc.createOffer(); await pc.setLocalDescription(offer);
+        await sendCallSignal(currentCallPeer,currentCallId,'offer',{sdp:pc.localDescription.sdp,type:pc.localDescription.type,video:!!video});
+        document.getElementById('callBarText').textContent=`اتصال بـ ${p.name} • ${video?'فيديو':'صوت'}`;
+        document.getElementById('callBar').classList.add('show');
+        if(video){const lv=document.getElementById('localCallVideo');lv.srcObject=callSt;lv.style.display='block';document.getElementById('rtcMediaWrap').style.display='block';}
+        toast('تم إرسال طلب الاتصال، بانتظار الرد');
+      } catch(err) { await stopRtc(false); toast('فشل بدء المكالمة: '+(err.message||'تحقق من إذن الميكروفون والكاميرا')); }
+    }
+    async function processCallSignal(sig) {
+      if(!sig?.id || rtcSeenSignals.has(sig.id)) return; rtcSeenSignals.add(sig.id);
+      const p=state.users.find(u=>u.public_id===sig.sender_uid);
+      if(sig.signal_type==='offer') {
+        if(currentCallId && currentCallId!==sig.call_id) { await sendCallSignal(sig.sender_uid,sig.call_id,'busy',{}).catch(()=>{}); return; }
+        if(!isContact(sig.sender_uid)) return;
+        pendingIncoming=sig; currentCallId=sig.call_id; currentCallPeer=sig.sender_uid;
+        document.getElementById('callerNameTxt').textContent=p?.username||sig.sender_uid;
+        document.getElementById('callerAvatarBox').innerHTML=`<img src="${p?.avatar_url||avatarSvg(p?.username||'ص')}" alt=""/>`;
+        document.getElementById('incomingCallType').textContent=sig.payload?.video?'مكالمة فيديو واردة':'مكالمة صوتية واردة';
+        ringtone.start();document.getElementById('incomingModal').classList.add('open');
+      } else if(sig.call_id===currentCallId && sig.sender_uid===currentCallPeer) {
+        if(sig.signal_type==='answer' && rtcPc) { await rtcPc.setRemoteDescription(new RTCSessionDescription(sig.payload)); for(const ice of bufferedIce) await rtcPc.addIceCandidate(new RTCIceCandidate(ice)).catch(()=>{});bufferedIce=[]; }
+        else if(sig.signal_type==='ice') { if(rtcPc && rtcPc.remoteDescription) await rtcPc.addIceCandidate(new RTCIceCandidate(sig.payload)).catch(()=>{}); else bufferedIce.push(sig.payload); }
+        else if(sig.signal_type==='hangup'||sig.signal_type==='reject') { await stopRtc(false); toast(sig.signal_type==='reject'?'تم رفض المكالمة':'انتهت المكالمة'); }
+        else if(sig.signal_type==='busy') { await stopRtc(false); toast('المستخدم مشغول حالياً'); }
+      }
+    }
+    async function initCallSignals() {
+      if(rtcSignalChannel) supabase.removeChannel(rtcSignalChannel);
+      rtcSignalChannel=supabase.channel('calls-for-'+state.user.public_id).on('postgres_changes',{event:'INSERT',schema:'public',table:'call_signals',filter:'receiver_uid=eq.'+state.user.public_id},payload=>processCallSignal(payload.new).catch(e=>toast(e.message||'تعذر معالجة إشارة المكالمة'))).subscribe();
+      const {data,error}=await supabase.from('call_signals').select('*').eq('receiver_uid',state.user.public_id).eq('signal_type','offer').order('created_at',{ascending:false}).limit(3);
+      if(!error && data) for(const sig of data) if(Date.now()-new Date(sig.created_at).getTime()<45000) await processCallSignal(sig).catch(()=>{});
+    }
+    document.getElementById('inChatAudioBtn').addEventListener('click',()=>startCall(false));
+    document.getElementById('inChatVideoBtn').addEventListener('click',()=>startCall(true));
+    document.getElementById('simIncomingBtn').style.display='none';
+    document.getElementById('acceptCallBtn').addEventListener('click',async()=>{
+      if(!pendingIncoming) return; const offerSig=pendingIncoming;
+      try {
+        ringtone.stop();document.getElementById('incomingModal').classList.remove('open');
+        currentCallId=offerSig.call_id;currentCallPeer=offerSig.sender_uid;
+        callSt=await navigator.mediaDevices.getUserMedia({audio:true,video:!!offerSig.payload?.video});
+        const pc=makeRtcPeer(currentCallPeer,currentCallId);await pc.setRemoteDescription(new RTCSessionDescription(offerSig.payload));
+        for(const ice of bufferedIce) await pc.addIceCandidate(new RTCIceCandidate(ice)).catch(()=>{}); bufferedIce=[];
+        const answer=await pc.createAnswer();await pc.setLocalDescription(answer);await sendCallSignal(currentCallPeer,currentCallId,'answer',{sdp:pc.localDescription.sdp,type:pc.localDescription.type});
+        document.getElementById('callBarText').textContent='مكالمة متصلة';document.getElementById('callBar').classList.add('show');
+      } catch(err) { await stopRtc(false);toast('تعذر قبول المكالمة: '+(err.message||'')); }
+    });
+    document.getElementById('rejectCallBtn').addEventListener('click',async()=>{if(pendingIncoming)await sendCallSignal(pendingIncoming.sender_uid,pendingIncoming.call_id,'reject',{}).catch(()=>{});ringtone.stop();document.getElementById('incomingModal').classList.remove('open');pendingIncoming=null;currentCallId=null;currentCallPeer=null;});
+    document.getElementById('muteMicBtn').addEventListener('click',()=>{micMuted=!micMuted;if(callSt)callSt.getAudioTracks().forEach(t=>t.enabled=!micMuted);document.getElementById('muteMicBtn').textContent=micMuted?'فتح الميكروفون':'كتم';});
+    document.getElementById('endCallBtn').addEventListener('click',()=>stopRtc(true));
+
+    // التنقل وتبديل الثيم واللغات
+    function switchTab(t) {
+      state.tab = t;
+      document.querySelectorAll('[data-tab]').forEach((b) => b.classList.toggle('active', b.dataset.tab === t));
+      document.getElementById('paneChats').classList.toggle('active', t === 'chats');
+      document.getElementById('paneCamera').classList.toggle('active', t === 'camera');
+      document.getElementById('paneLessons').classList.toggle('active', t === 'lessons');
+      document.getElementById('paneSettings').classList.toggle('active', t === 'settings');
+      if (t === 'chats') renderChats();
+      if (t === 'lessons') renderLessons();
+    }
+    document.querySelectorAll('[data-tab]').forEach((b) => b.addEventListener('click', () => switchTab(b.dataset.tab)));
+
+    async function cycleTheme() {
+      const order = ['dark', 'light', 'crimson'];
+      setTheme(order[(order.indexOf(state.theme) + 1) % order.length]);
+      if (state.user) await supabase.from('profiles').update({ theme: state.theme }).eq('id', state.user.id);
+    }
+    document.getElementById('deskCycleThemeBtn').addEventListener('click', cycleTheme);
+    document.getElementById('mobCycleThemeBtn').addEventListener('click', cycleTheme);
+
+    document.getElementById('settingsAppLangSelect').addEventListener('change', async (e) => {
+      state.appLanguage = e.target.value; saveSession(); applyLanguages();
+      if (state.user) await supabase.from('profiles').update({ app_language: state.appLanguage }).eq('id', state.user.id);
+    });
+    document.getElementById('settingsLessonsLangSelect').addEventListener('change', async (e) => {
+      state.lessonsLanguage = e.target.value; saveSession(); applyLanguages();
+      if (state.user) await supabase.from('profiles').update({ lessons_language: state.lessonsLanguage }).eq('id', state.user.id);
+    });
+    document.getElementById('lessonsPaneLangSelect').addEventListener('change', async (e) => {
+      state.lessonsLanguage = e.target.value; saveSession(); applyLanguages();
+      if (state.user) await supabase.from('profiles').update({ lessons_language: state.lessonsLanguage }).eq('id', state.user.id);
+    });
+
+    // بدء التشغيل
+    loadSession();
+    setTheme(state.theme);
+    populateLangs();
+    applyLanguages();
+    if (state.user) enterCloudApp();
+  </script>
+</body>
+</html>
