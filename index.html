@@ -1667,9 +1667,11 @@
     // مكالمات صوت/فيديو فعلية عبر Jitsi Meet (خدمة خارجية)
     let liveCallApi = null, liveCallRoom = null, jitsiLoading = null;
     function callRoomName(peer) {
-      const a = String(state.user?.public_id || 'guest');
-      const b = String(state.threadType === 'dm' ? state.targetId : state.targetId || 'general');
-      const raw = ['EduChat', state.threadType, a, b].sort().join('|');
+      // Stable room key: both participants derive the same room regardless of who starts the call.
+      const selfId = String(state.user?.public_id || 'guest');
+      const peerId = String(state.threadType === 'dm' ? state.targetId : state.targetId || 'general');
+      const ids = [selfId, peerId].sort();
+      const raw = ['EduChat', state.threadType, ...ids].join('|');
       let h = 2166136261;
       for (let i=0;i<raw.length;i++) { h ^= raw.charCodeAt(i); h = Math.imul(h,16777619); }
       return 'EduChatRoom' + (h>>>0).toString(16);
