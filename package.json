@@ -1,0 +1,8 @@
+{
+  "name": "educhat-cloud",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test:calls": "node --test tests/call-signaling-client.test.js"
+  }
+}
