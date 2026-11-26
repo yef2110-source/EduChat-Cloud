@@ -15,6 +15,8 @@ on:
     paths:
       - 'src/calls/**'
       - 'tests/call-signaling-client.test.js'
+      - 'tests/validate-inline-script.js'
+      - 'index.html'
       - 'supabase/migrations/**'
       - 'package.json'
       - '.github/workflows/call-signaling-tests.yml'
