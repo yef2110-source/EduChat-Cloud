@@ -17,13 +17,13 @@ See [Product roadmap](docs/PRODUCT_ROADMAP.md) for scope and [Call signaling set
 
 Requires Node.js (no install step currently required for the listed checks).
 
-Run:
+Run the complete automated checks (including study-video URL validation and local-library favorites/backup tests):
 
 ```bash
-npm run test:calls
-npm run check:html
-npm run check:call-migrations
+npm test
 ```
+
+Individual checks are also available: `npm run test:calls`, `npm run check:html`, `npm run check:call-migrations`, `npm run test:study-videos`, and `npm run test:study-video-favorites`.
 
 These checks validate the call helper's tests, inline JavaScript syntax in `index.html`, and expected safeguards in the call-insert migration. They do not replace browser/device, backend, security, or staging tests.
 
