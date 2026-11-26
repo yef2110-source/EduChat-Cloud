@@ -61,8 +61,21 @@ export function createCallSignalingClient({ supabase, onIncoming, onStatus, time
     timer = setTimeout(async () => {
       const c = activeCall;
       if (!c || c.id !== data.id || !['invited','ringing'].includes(c.status)) return;
-      const { error: timeoutError } = await supabase.from('educhat_v2_calls').update({ status: 'no_answer' }).eq('id', data.id).eq('caller_id', callerId).in('status', ['invited','ringing']);
-      if (timeoutError) notifyStatus('timeout_update_failed', c);
+      const { data: timedOutCall, error: timeoutError } = await supabase.from('educhat_v2_calls')
+        .update({ status: 'no_answer' })
+        .eq('id', data.id)
+        .eq('caller_id', callerId)
+        .in('status', ['invited','ringing'])
+        .select()
+        .maybeSingle();
+      if (timeoutError) {
+        notifyStatus('timeout_update_failed', c);
+      } else if (timedOutCall) {
+        activeCall = timedOutCall;
+        notifyStatus('no_answer', timedOutCall);
+        activeCall = null;
+        stopTimer();
+      }
     }, timeoutMs + 150);
     return data;
   }
