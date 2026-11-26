@@ -1796,7 +1796,7 @@
       const allVideos = readStudyVideos();
       const mode = document.getElementById('studyVideoFilter')?.value || 'all';
       const sort = document.getElementById('studyVideoSort')?.value || 'newest';
-      const items = allVideos.filter(v => (mode !== 'favorites' || v.favorite) && [v.title,v.subject,v.level,v.type,v.desc].join(' ').toLowerCase().includes(q);
+      const items = allVideos.filter(v => (mode !== 'favorites' || v.favorite) && [v.title,v.subject,v.level,v.type,v.desc].join(' ').toLowerCase().includes(q));
       if(sort==='title') items.sort((a,b)=>a.title.localeCompare(b.title,'ar'));
       list.innerHTML = '';
       if (!items.length) { const empty=document.createElement('p'); empty.textContent='لا توجد فيديوهات محفوظة بعد. أضف أول فيديو دراسي.'; empty.style.color='var(--muted)'; list.append(empty); return; }
