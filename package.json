@@ -6,7 +6,8 @@
     "test:calls": "node --test tests/call-signaling-client.test.js",
     "check:html": "node tests/validate-inline-script.js",
     "check:call-migrations": "node tests/validate-call-migrations.js",
-    "test": "npm run test:calls && npm run check:html && npm run check:call-migrations && npm run test:study-videos",
-    "test:study-videos": "node --test tests/study-video-url.test.js"
+    "test": "npm run test:calls && npm run check:html && npm run check:call-migrations && npm run test:study-videos && npm run test:study-video-favorites",
+    "test:study-videos": "node --test tests/study-video-url.test.js",
+    "test:study-video-favorites": "node --test tests/study-video-favorites.test.js"
   }
 }
