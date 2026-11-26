@@ -1,23 +1,36 @@
 # EduChat V2 call signaling — setup and integration notes
 
-This migration adds an authenticated call-session table with Realtime events for the incoming-call flow. It is **not yet wired into the existing HTML client and is not deployed**.
+This adds an authenticated call-session table, a hardened status-transition trigger, and a client helper with separate Realtime subscriptions for incoming and outgoing calls. It is **not yet wired into the existing HTML client or deployed**.
 
 ## Apply order
-1. In a staging Supabase project, apply `EduChatCloud_v2_secure_foundation.sql` first (it creates V2 profiles, friendships, messages, notifications and RLS).
+1. In a staging Supabase project, apply `EduChatCloud_v2_secure_foundation.sql` first (V2 profiles, friendships, messages, notifications and RLS).
 2. Apply `supabase/migrations/202611260001_educhat_v2_call_signaling.sql`.
-3. Verify the table `public.educhat_v2_calls` is included in the `supabase_realtime` publication.
-4. Create two test Auth users, create their V2 profiles, and grant friendship through the trusted backend/RPC path.
-5. Test call invitations between the two signed-in devices. Never test this on production data until staging passes.
+3. Apply `supabase/migrations/202611260002_educhat_v2_call_transition_guard.sql` to tighten permitted state changes.
+4. Verify `public.educhat_v2_calls` is included in the `supabase_realtime` publication.
+5. Create two test Auth users, create V2 profiles, and grant friendship through the trusted backend/RPC path.
+6. Test calls between two signed-in devices. Do not test on production data until staging passes.
 
-## Proposed client protocol
-- Caller inserts a call row with status `invited`, a unique room name, audio/video type, and expiry 45 seconds in the future.
-- Recipient subscribes to call rows where `callee_id` is their authenticated UID. On receiving an invitation, display incoming-call UI and update the row to `ringing`. This update is the caller's delivery/ringing acknowledgement.
-- Recipient updates status to `answered`, `declined`, or `busy`; caller may update it to `no_answer` after the expiry or `failed` if delivery fails.
-- On answer, both clients join the same Jitsi room. On end, either participant changes status to `ended`.
-- Use realtime subscriptions only for the session's participants. Unsubscribe and stop ringtone when resolved; guard duplicate and late events by call UUID.
+## Client helper
+`src/calls/call-signaling-client.js` exports `createCallSignalingClient({supabase,onIncoming,onStatus,timeoutMs})`. Call `subscribeIncoming()` once the authenticated user is ready. Use `startCall(calleeAuthUuid,'audio'|'video')` to create an outgoing session. The helper handles incoming ringing acknowledgement, answer, decline, end, timeout, and channel cleanup. Incoming and call-watch channels are separate to avoid losing incoming events while watching an outgoing call.
+
+## Proposed protocol
+- Caller inserts `invited` with unique room name and expiry.
+- Recipient acknowledges delivery by transitioning to `ringing`; only after that should caller UI say “Phone is ringing”.
+- Recipient answers or declines; caller may set `no_answer` only after expiry. Participants may end an answered call.
+- On answer, both clients join the same Jitsi room. Unsubscribe and stop ringtone on resolution; guard duplicate and late events by call UUID.
 
 ## Caller UI states
-`Connecting` while invitation is being sent; `Phone is ringing` only after the recipient acknowledges with `ringing`; `Answered`; `Declined`; `Busy`; `No answer`; `Offline / Unreachable`; `Failed`; `Ended`.
+Connecting; Phone is ringing (recipient acknowledgement); Answered; Declined; Busy; No answer; Offline/Unreachable; Failed; Ended.
 
-## Known limitation / security note
-The existing client is still UID-only legacy authentication and legacy tables are not secure. This migration is based on Supabase Auth UUIDs and friendship checks. Do not connect the legacy client to this table or call it production-ready until Auth is wired into the UI and RLS is tested. Push notifications while the app is closed require an external push delivery setup (e.g., Web Push/FCM); a Realtime event alone cannot wake a browser that is offline.
+## Test checklist (not yet run)
+- [ ] Migration applied successfully in staging; realtime publication verified.
+- [ ] Two Auth users are friends; non-friends cannot create sessions.
+- [ ] Incoming insert produces one incoming-call UI and recipient `ringing` acknowledgement.
+- [ ] Caller displays ringing only after acknowledgement.
+- [ ] Answer, decline, busy, no-answer timeout, end-call transitions work.
+- [ ] Concurrent incoming while busy; duplicate events; late answer after expiry; reconnect/offline cases.
+- [ ] Realtime channel cleanup on sign-out/unmount.
+- [ ] Test on two actual devices and confirm Jitsi room matching.
+
+## Known limitation and security note
+The current HTML app still uses legacy UID-only auth and tables. Do not wire this V2 client to legacy identity values. V2 requires Supabase Auth UUIDs and validated friendship rows. Browser Realtime cannot wake an app that is fully closed; that needs Web Push/FCM and backend delivery. Migration and tests are staging-only; this is not production-ready.
