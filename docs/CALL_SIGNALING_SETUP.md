@@ -19,6 +19,7 @@ Required foundation contract:
 2. Apply supabase/migrations/202611260001_educhat_v2_call_signaling.sql.
 3. Apply supabase/migrations/202611260002_educhat_v2_call_transition_guard.sql.
 4. Apply supabase/migrations/202611260003_educhat_v2_call_timestamp_hardening.sql.
+5. Apply supabase/migrations/202611260004_educhat_v2_call_insert_hardening.sql.
 5. Confirm public.educhat_v2_calls is in the supabase_realtime publication.
 6. Create two staging Auth users, create their V2 profiles, and grant a friendship through the trusted backend/RPC path.
 7. Test with two signed-in devices. Do not use production data before staging passes.
