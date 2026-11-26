@@ -5,6 +5,7 @@
   "scripts": {
     "test:calls": "node --test tests/call-signaling-client.test.js",
     "check:html": "node tests/validate-inline-script.js",
-    "check:call-migrations": "node tests/validate-call-migrations.js"
+    "check:call-migrations": "node tests/validate-call-migrations.js",
+    "test": "npm run test:calls && npm run check:html && npm run check:call-migrations"
   }
 }
