@@ -17,7 +17,7 @@ test('rejects insecure, spoofed, malformed and non-video URLs', () => {
     `https://youtube.com.evil.test/watch?v=${ID}`,
     `https://evil.test/?v=${ID}`,
     `https://user:pass@youtube.com/watch?v=${ID}`,
-    `https://youtube.com:443/watch?v=${ID}`,
+    `https://youtube.com:8443/watch?v=${ID}`,
     `https://youtu.be/${ID}/extra`,
     `https://youtube.com/shorts/not-an-id`,
     'not a url'
