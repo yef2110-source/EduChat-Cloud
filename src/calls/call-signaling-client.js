@@ -82,9 +82,11 @@ export function createCallSignalingClient({ supabase, onIncoming, onStatus, time
     if (!activeCall) return;
     const call = activeCall, uid = await getUserId();
     if (uid !== call.caller_id && uid !== call.callee_id) throw new Error('Not a participant');
-    const { error } = await supabase.from('educhat_v2_calls').update({ status: 'ended' }).eq('id', call.id).in('status', ['answered','ringing','invited']);
+    const terminalStatus = uid === call.callee_id && call.status !== 'answered' ? 'declined' : 'ended';
+    const allowedStatuses = terminalStatus === 'declined' ? ['ringing','invited'] : ['answered','ringing','invited'];
+    const { error } = await supabase.from('educhat_v2_calls').update({ status: terminalStatus }).eq('id', call.id).in('status', allowedStatuses);
     if (error) throw error;
-    stopTimer(); notifyStatus('ended', call); activeCall = null;
+    stopTimer(); notifyStatus(terminalStatus, call); activeCall = null;
   }
   async function dispose() {
     disposed = true; stopTimer();
