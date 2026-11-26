@@ -30,3 +30,10 @@ test('adding a duplicate video URL is rejected', () => {
   assert.match(html, /videos\.some\(v=>validStudyYoutubeUrl\(v\.url\)===videoId\)/);
   assert.match(html, /هذا الفيديو موجود بالفعل في مكتبتك/);
 });
+
+test('study video list can be sorted by Arabic title', () => {
+  assert.match(html, /id="studyVideoSort"/);
+  assert.match(html, /sort==='title'/);
+  assert.match(html, /localeCompare\(b\.title,'ar'\)/);
+  assert.match(html, /studyVideoSort'\)\.addEventListener\('change',renderStudyVideos\)/);
+});
