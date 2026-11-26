@@ -3,6 +3,7 @@
  */
 export function createCallSignalingClient({ supabase, onIncoming, onStatus, timeoutMs = 45000 }) {
   if (!supabase?.auth || !supabase?.from || !supabase?.channel) throw new Error('Authenticated Supabase client required');
+  if (!Number.isFinite(timeoutMs) || timeoutMs <= 0 || timeoutMs > 60000) throw new RangeError('timeoutMs must be between 1 and 60000 ms');
   let activeCall = null, incomingChannel = null, watchChannel = null, timer = null, disposed = false;
   const stopTimer = () => { if (timer) clearTimeout(timer); timer = null; };
   const notifyStatus = (status, call = activeCall) => onStatus?.({ status, call });
