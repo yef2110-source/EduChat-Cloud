@@ -1,0 +1,43 @@
+name: Call signaling tests
+on:
+  pull_request:
+    paths:
+      - 'src/calls/**'
+      - 'tests/call-signaling-client.test.js'
+      - 'tests/validate-inline-script.js'
+      - 'tests/validate-call-migrations.js'
+      - 'tests/study-video-url.test.js'
+      - 'tests/study-video-favorites.test.js'
+      - 'tests/study-video-favorites.test.js'
+      - 'src/study-videos/**'
+      - 'index.html'
+      - 'supabase/migrations/**'
+      - 'package.json'
+      - '.github/workflows/call-signaling-tests.yml'
+  push:
+    branches:
+      - fix/call-room-sync-2026-11
+    paths:
+      - 'src/calls/**'
+      - 'tests/call-signaling-client.test.js'
+      - 'tests/validate-inline-script.js'
+      - 'tests/validate-call-migrations.js'
+      - 'tests/study-video-url.test.js'
+      - 'src/study-videos/**'
+      - 'index.html'
+      - 'supabase/migrations/**'
+      - 'package.json'
+      - '.github/workflows/call-signaling-tests.yml'
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm run test:calls
+      - run: npm run check:html
+      - run: npm run check:call-migrations
+      - run: npm run test:study-videos
+      - run: npm run test:study-video-favorites
