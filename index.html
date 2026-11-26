@@ -699,6 +699,7 @@
             </form>
             <input id="studyVideoSearch" type="search" placeholder="ابحث في العنوان أو المادة أو المستوى...">
             <select id="studyVideoFilter" aria-label="تصفية الفيديوهات"><option value="all">كل الفيديوهات</option><option value="favorites">المفضلة فقط</option></select>
+            <select id="studyVideoSort" aria-label="ترتيب الفيديوهات"><option value="newest">الأحدث</option><option value="title">حسب العنوان</option></select>
             <div style="display:flex;gap:8px;flex-wrap:wrap;"><button type="button" id="exportStudyVideosBtn">تصدير مكتبتي</button><label style="cursor:pointer;background:var(--surface-2);border:1px solid var(--border);padding:8px 11px;border-radius:13px;font-size:12.5px;font-weight:700;">استيراد نسخة<input id="importStudyVideosFile" type="file" accept="application/json,.json" style="display:none;"></label></div>
             <div id="studyVideoList" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:10px;"></div>
           </div>
@@ -1794,7 +1795,9 @@
       const q = (document.getElementById('studyVideoSearch').value || '').trim().toLowerCase();
       const allVideos = readStudyVideos();
       const mode = document.getElementById('studyVideoFilter')?.value || 'all';
-      const items = allVideos.filter(v => (mode !== 'favorites' || v.favorite) && [v.title,v.subject,v.level,v.type,v.desc].join(' ').toLowerCase().includes(q));
+      const sort = document.getElementById('studyVideoSort')?.value || 'newest';
+      const items = allVideos.filter(v => (mode !== 'favorites' || v.favorite) && [v.title,v.subject,v.level,v.type,v.desc].join(' ').toLowerCase().includes(q);
+      if(sort==='title') items.sort((a,b)=>a.title.localeCompare(b.title,'ar'));
       list.innerHTML = '';
       if (!items.length) { const empty=document.createElement('p'); empty.textContent='لا توجد فيديوهات محفوظة بعد. أضف أول فيديو دراسي.'; empty.style.color='var(--muted)'; list.append(empty); return; }
       for (const v of items) {
@@ -1843,6 +1846,7 @@
     });
     document.getElementById('studyVideoSearch').addEventListener('input',renderStudyVideos);
     document.getElementById('studyVideoFilter').addEventListener('change',renderStudyVideos);
+    document.getElementById('studyVideoSort').addEventListener('change',renderStudyVideos);
     renderStudyVideos();
 
     // بدء التشغيل
