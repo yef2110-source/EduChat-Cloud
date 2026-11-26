@@ -15,7 +15,7 @@ EduChat is a student-first learning and community platform. Social features are 
 - Chat: messages, attachments, voice recordings, replies, edit/delete, reactions, search, delivery/read states.
 - Friends: search, requests, accept/decline, block, online status, study profiles.
 - Lessons: course materials, metadata, PDF/file links, favorites, access controls.
-- Study Videos: YouTube URL submission initially; title/description, subject, level/major, video type, search, save/favorites, video player, reporting. No entertainment/reels feed.
+- Study Videos (prototype implemented): YouTube URL submission, title/description, subject, level and type, search, local favorites, favorites-only filter, title sorting, embedded player, duplicate-link prevention, JSON library export/import with URL validation and duplicate detection. These library features are browser-local; no cloud sync or reporting/moderation yet. No entertainment/reels feed.
 - Stories: student updates with expiration and privacy controls.
 - Notifications: preferences, mute/DND, private previews.
 - Owner/moderation: report queue, review actions, warn/restrict/remove, audit log.
