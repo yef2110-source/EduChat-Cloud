@@ -698,6 +698,7 @@
               <small style="color:var(--muted);">حالياً تُحفظ روابط الفيديو في هذا المتصفح فقط، وليست متزامنة مع Supabase.</small>
             </form>
             <input id="studyVideoSearch" type="search" placeholder="ابحث في العنوان أو المادة أو المستوى...">
+            <select id="studyVideoFilter" aria-label="تصفية الفيديوهات"><option value="all">كل الفيديوهات</option><option value="favorites">المفضلة فقط</option></select>
             <div id="studyVideoList" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:10px;"></div>
           </div>
         </section>
@@ -1790,7 +1791,9 @@
       const list = document.getElementById('studyVideoList');
       if (!list) return;
       const q = (document.getElementById('studyVideoSearch').value || '').trim().toLowerCase();
-      const items = readStudyVideos().filter(v => [v.title,v.subject,v.level,v.type,v.desc].join(' ').toLowerCase().includes(q));
+      const allVideos = readStudyVideos();
+      const mode = document.getElementById('studyVideoFilter')?.value || 'all';
+      const items = allVideos.filter(v => (mode !== 'favorites' || v.favorite) && [v.title,v.subject,v.level,v.type,v.desc].join(' ').toLowerCase().includes(q));
       list.innerHTML = '';
       if (!items.length) { const empty=document.createElement('p'); empty.textContent='لا توجد فيديوهات محفوظة بعد. أضف أول فيديو دراسي.'; empty.style.color='var(--muted)'; list.append(empty); return; }
       for (const v of items) {
@@ -1801,8 +1804,9 @@
         const actions=document.createElement('div'); actions.style.cssText='display:flex;gap:7px;flex-wrap:wrap;';
         const watch=document.createElement('button'); watch.type='button'; watch.textContent='▶ مشاهدة';
         watch.addEventListener('click',()=>{const id=validStudyYoutubeUrl(v.url);if(id){const frame=document.createElement('iframe');frame.src='https://www.youtube-nocookie.com/embed/'+id;frame.title=v.title;frame.allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';frame.allowFullscreen=true;frame.style.cssText='width:100%;aspect-ratio:16/9;border:0;border-radius:12px;';const existing=card.querySelector('iframe');if(existing)existing.remove();card.insertBefore(frame,actions);}else window.open(v.url,'_blank','noopener');});
+        const favorite=document.createElement('button'); favorite.type='button'; favorite.textContent=v.favorite?'★ إزالة من المفضلة':'☆ إضافة للمفضلة'; favorite.setAttribute('aria-pressed',v.favorite?'true':'false'); favorite.addEventListener('click',()=>{const updated=readStudyVideos().map(x=>x.id===v.id?{...x,favorite:!x.favorite}:x);localStorage.setItem('educhat-study-videos',JSON.stringify(updated));renderStudyVideos();});
         const remove=document.createElement('button'); remove.type='button';remove.textContent='حذف من مكتبتي';remove.addEventListener('click',()=>{localStorage.setItem('educhat-study-videos',JSON.stringify(readStudyVideos().filter(x=>x.id!==v.id)));renderStudyVideos();toast('تم حذف الفيديو من هذه المكتبة');});
-        actions.append(watch,remove);card.append(title,meta);if(v.desc)card.append(desc);card.append(actions);list.append(card);
+        actions.append(watch,favorite,remove);card.append(title,meta);if(v.desc)card.append(desc);card.append(actions);list.append(card);
       }
     }
     document.getElementById('studyVideoForm').addEventListener('submit',(e)=>{
@@ -1813,6 +1817,7 @@
       localStorage.setItem('educhat-study-videos',JSON.stringify(videos));e.target.reset();renderStudyVideos();toast('تمت إضافة الفيديو إلى مكتبتك المحلية');
     });
     document.getElementById('studyVideoSearch').addEventListener('input',renderStudyVideos);
+    document.getElementById('studyVideoFilter').addEventListener('change',renderStudyVideos);
     renderStudyVideos();
 
     // بدء التشغيل
