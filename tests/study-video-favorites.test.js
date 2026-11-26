@@ -16,3 +16,12 @@ test('study video favorite toggle persists and updates button state', () => {
   assert.match(html, /\{\.\.\.x,favorite:!x\.favorite\}/);
   assert.match(html, /studyVideoFilter'\)\.addEventListener\('change',renderStudyVideos\)/);
 });
+
+test('study video library supports JSON backup and validated import', () => {
+  assert.match(html, /id="exportStudyVideosBtn"/);
+  assert.match(html, /id="importStudyVideosFile"/);
+  assert.match(html, /file\.size>1024\*1024/);
+  assert.match(html, /validStudyYoutubeUrl\(v\.url\)/);
+  assert.match(html, /seen\.has\(id\)/);
+  assert.match(html, /slice\(0,500\)\)\)/);
+});
