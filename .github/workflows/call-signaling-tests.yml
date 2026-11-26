@@ -8,6 +8,7 @@ on:
       - 'tests/validate-call-migrations.js'
       - 'tests/study-video-url.test.js'
       - 'tests/study-video-favorites.test.js'
+      - 'tests/study-video-favorites.test.js'
       - 'src/study-videos/**'
       - 'index.html'
       - 'supabase/migrations/**'
