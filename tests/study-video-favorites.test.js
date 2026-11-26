@@ -13,6 +13,6 @@ test('study videos provide a favorites filter', () => {
 test('study video favorite toggle persists and updates button state', () => {
   assert.match(html, /v\.favorite\?'★ إزالة من المفضلة':'☆ إضافة للمفضلة'/);
   assert.match(html, /favorite\.setAttribute\('aria-pressed',v\.favorite\?'true':'false'\)/);
-  assert.match(html, /\{\.\.x,favorite:!x\.favorite\}/);
+  assert.match(html, /\{\.\.\.x,favorite:!x\.favorite\}/);
   assert.match(html, /studyVideoFilter'\)\.addEventListener\('change',renderStudyVideos\)/);
 });
