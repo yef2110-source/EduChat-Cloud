@@ -20,6 +20,8 @@ on:
       - 'tests/call-signaling-client.test.js'
       - 'tests/validate-inline-script.js'
       - 'tests/validate-call-migrations.js'
+      - 'tests/study-video-url.test.js'
+      - 'src/study-videos/**'
       - 'index.html'
       - 'supabase/migrations/**'
       - 'package.json'
