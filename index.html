@@ -833,6 +833,7 @@
 
   <script type="module">
     import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+    import { validStudyYoutubeUrl } from './src/study-videos/youtube-url.js';
 
     // =========================================================================
     // بيانات مشروعك على Supabase (Public URL + Publishable Key فقط)
@@ -1782,14 +1783,6 @@
 
 
     // فيديوهات دراسية: إضافة واجهة الفيديوهات الجديدة مع الحفاظ على وظائف EduChat السحابية القديمة.
-    function validStudyYoutubeUrl(raw) {
-      try {
-        const u = new URL(raw);
-        if (!['youtube.com','www.youtube.com','m.youtube.com','youtu.be','www.youtu.be'].includes(u.hostname)) return null;
-        const id = u.hostname.includes('youtu.be') ? u.pathname.slice(1) : (u.searchParams.get('v') || (u.pathname.startsWith('/embed/') ? u.pathname.split('/')[2] : ''));
-        return /^[a-zA-Z0-9_-]{11}$/.test(id) ? id : null;
-      } catch { return null; }
-    }
     function readStudyVideos() {
       try { return JSON.parse(localStorage.getItem('educhat-study-videos') || '[]'); } catch { return []; }
     }
