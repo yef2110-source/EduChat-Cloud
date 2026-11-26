@@ -94,3 +94,16 @@ test('recipient can decline an incoming ringing call', async () => {
   assert.equal(row.status, 'declined'); assert.equal(client.activeCall, null);
   await client.dispose();
 });
+
+
+test('caller receives a no-answer status after the expiry timeout', async () => {
+  const m = mockSupabase('u-caller');
+  const statuses = [];
+  const client = createCallSignalingClient({ supabase: m.supabase, timeoutMs: 5, onStatus: event => statuses.push(event.status) });
+  const call = await client.startCall('u-peer', 'audio', 'room-timeout-123');
+  await new Promise(resolve => setTimeout(resolve, 220));
+  assert.equal(m.calls.get(call.id).status, 'no_answer');
+  assert.ok(statuses.includes('no_answer'));
+  assert.equal(client.activeCall, null);
+  await client.dispose();
+});
