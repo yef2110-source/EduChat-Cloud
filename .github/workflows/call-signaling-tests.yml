@@ -17,6 +17,7 @@ on:
       - 'src/calls/**'
       - 'tests/call-signaling-client.test.js'
       - 'tests/validate-inline-script.js'
+      - 'tests/validate-call-migrations.js'
       - 'index.html'
       - 'supabase/migrations/**'
       - 'package.json'
