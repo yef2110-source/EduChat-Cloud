@@ -46,6 +46,21 @@ function mockSupabase(userId='u-caller') {
   return { supabase, calls, channels };
 }
 
+test('rejects call timeout values outside the database expiry limit', () => {
+  const m = mockSupabase();
+  assert.throws(() => createCallSignalingClient({ supabase: m.supabase, timeoutMs: 0 }), /timeoutMs/);
+  assert.throws(() => createCallSignalingClient({ supabase: m.supabase, timeoutMs: 60001 }), /timeoutMs/);
+  assert.throws(() => createCallSignalingClient({ supabase: m.supabase, timeoutMs: NaN }), /timeoutMs/);
+});
+
+test('accepts the maximum server-supported call timeout', async () => {
+  const m = mockSupabase();
+  const client = createCallSignalingClient({ supabase: m.supabase, timeoutMs: 60000 });
+  const call = await client.startCall('u-peer', 'audio');
+  assert.equal(call.expires_at, new Date(Date.parse(call.expires_at)).toISOString());
+  await client.dispose();
+});
+
 test('creates an invited call record and returns it', async () => {
   const m = mockSupabase(); const client = createCallSignalingClient({ supabase: m.supabase });
   const call = await client.startCall('u-recipient', 'audio', 'room-test-name-123');
