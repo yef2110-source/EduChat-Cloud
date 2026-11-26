@@ -57,7 +57,7 @@ begin
     raise exception 'Call identity fields are immutable';
   end if;
 
-  if old.status <> 'invited' and old.status <> 'ringing' and new.status <> old.status then
+  if old.status not in ('invited','ringing','answered') and new.status <> old.status then
     raise exception 'Call is already resolved';
   end if;
   if old.status='invited' and new.status='ringing' and auth.uid() <> old.callee_id then
