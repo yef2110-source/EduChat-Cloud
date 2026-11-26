@@ -1814,7 +1814,9 @@
       e.preventDefault();
       const title=document.getElementById('studyVideoTitle').value.trim(),url=document.getElementById('studyVideoUrl').value.trim();
       if(!title||!validStudyYoutubeUrl(url)){toast('أدخل عنواناً ورابط YouTube صالحاً');return;}
-      const videos=readStudyVideos();videos.unshift({id:'sv-'+Date.now(),title,url,subject:document.getElementById('studyVideoSubject').value.trim(),level:document.getElementById('studyVideoLevel').value,type:document.getElementById('studyVideoType').value,desc:document.getElementById('studyVideoDesc').value.trim()});
+      const videoId=validStudyYoutubeUrl(url),videos=readStudyVideos();
+      if(videos.some(v=>validStudyYoutubeUrl(v.url)===videoId)){toast('هذا الفيديو موجود بالفعل في مكتبتك');return;}
+      videos.unshift({id:'sv-'+Date.now(),title,url,subject:document.getElementById('studyVideoSubject').value.trim(),level:document.getElementById('studyVideoLevel').value,type:document.getElementById('studyVideoType').value,desc:document.getElementById('studyVideoDesc').value.trim()});
       localStorage.setItem('educhat-study-videos',JSON.stringify(videos));e.target.reset();renderStudyVideos();toast('تمت إضافة الفيديو إلى مكتبتك المحلية');
     });
     document.getElementById('exportStudyVideosBtn').addEventListener('click',()=>{
