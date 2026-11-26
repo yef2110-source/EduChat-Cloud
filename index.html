@@ -1665,7 +1665,7 @@
     });
 
     // مكالمات صوت/فيديو فعلية عبر Jitsi Meet (خدمة خارجية)
-    let liveCallApi = null, liveCallRoom = null, jitsiLoading = null;
+    let liveCallApi = null, liveCallRoom = null, jitsiLoading = null, callAttemptId = 0;
     function callRoomName(peer) {
       // Stable room key: both participants derive the same room regardless of who starts the call.
       const selfId = String(state.user?.public_id || 'guest');
@@ -1682,7 +1682,7 @@
       jitsiLoading = new Promise((resolve,reject) => {
         const script=document.createElement('script');
         script.src='https://meet.jit.si/external_api.js'; script.async=true;
-        script.onload=resolve; script.onerror=()=>reject(new Error('تعذر تحميل خدمة المكالمات'));
+        script.onload=resolve; script.onerror=()=>{jitsiLoading=null;reject(new Error('تعذر تحميل خدمة المكالمات'));};
         document.head.appendChild(script);
       });
       return jitsiLoading;
@@ -1690,13 +1690,13 @@
     async function startCall(video) {
       const peer=getPeerMeta(); if(!peer){toast('اختر محادثة أولاً');return;}
       if(!state.user?.public_id){toast('سجّل الدخول أولاً');return;}
-      const stage=document.getElementById('liveCallStage');
+      const attempt=++callAttemptId;\n      const stage=document.getElementById('liveCallStage');
       stage.classList.add('open'); stage.setAttribute('aria-hidden','false');
       document.getElementById('liveCallTitle').textContent=(video?'مكالمة فيديو مع ':'مكالمة صوتية مع ')+peer.name;
       document.getElementById('liveCallStatus').textContent='جاري الاتصال بخدمة المكالمات…';
       liveCallRoom=callRoomName(peer);
       try {
-        await loadJitsiApi();
+        await loadJitsiApi();\n        if(attempt!==callAttemptId)return;
         if(liveCallApi){liveCallApi.dispose();liveCallApi=null;}
         document.getElementById('jitsiMount').innerHTML='';
         liveCallApi=new window.JitsiMeetExternalAPI('meet.jit.si',{
@@ -1713,7 +1713,7 @@
           interfaceConfigOverwrite:{APP_NAME:'EduChat',MOBILE_APP_PROMO:false,SHOW_JITSI_WATERMARK:false,SHOW_BRAND_WATERMARK:false}
         });
         liveCallApi.addListener('videoConferenceJoined',()=>document.getElementById('liveCallStatus').textContent='أنت داخل غرفة المكالمة — ينتظر انضمام الطرف الآخر');
-        liveCallApi.addListener('participantJoined',()=>document.getElementById('liveCallStatus').textContent='تم انضمام الطرف الآخر');
+        liveCallApi.addListener('participantJoined',()=>document.getElementById('liveCallStatus').textContent='تم انضمام الطرف الآخر');\n        liveCallApi.addListener('participantLeft',()=>document.getElementById('liveCallStatus').textContent='غادر أحد المشاركين غرفة المكالمة');\n        liveCallApi.addListener('connectionFailed',()=>document.getElementById('liveCallStatus').textContent='انقطع الاتصال بخدمة المكالمات — حاول إعادة الاتصال');
         liveCallApi.addListener('readyToClose',closeLiveCall);
         document.getElementById('copyCallLinkBtn').onclick=async()=>{
           const url='https://meet.jit.si/'+encodeURIComponent(liveCallRoom);
@@ -1725,7 +1725,7 @@
         toast(err.message||'تعذر بدء المكالمة');
       }
     }
-    function closeLiveCall(){
+    function closeLiveCall(){\n      callAttemptId++;
       if(liveCallApi){try{liveCallApi.dispose();}catch{} liveCallApi=null;}
       document.getElementById('jitsiMount').innerHTML='';
       document.getElementById('liveCallStage').classList.remove('open');
