@@ -3,6 +3,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "test:calls": "node --test tests/call-signaling-client.test.js"
+    "test:calls": "node --test tests/call-signaling-client.test.js",
+    "check:html": "node tests/validate-inline-script.js"
   }
 }
