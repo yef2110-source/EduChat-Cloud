@@ -699,6 +699,7 @@
             </form>
             <input id="studyVideoSearch" type="search" placeholder="ابحث في العنوان أو المادة أو المستوى...">
             <select id="studyVideoFilter" aria-label="تصفية الفيديوهات"><option value="all">كل الفيديوهات</option><option value="favorites">المفضلة فقط</option></select>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;"><button type="button" id="exportStudyVideosBtn">تصدير مكتبتي</button><label style="cursor:pointer;background:var(--surface-2);border:1px solid var(--border);padding:8px 11px;border-radius:13px;font-size:12.5px;font-weight:700;">استيراد نسخة<input id="importStudyVideosFile" type="file" accept="application/json,.json" style="display:none;"></label></div>
             <div id="studyVideoList" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:10px;"></div>
           </div>
         </section>
@@ -1815,6 +1816,28 @@
       if(!title||!validStudyYoutubeUrl(url)){toast('أدخل عنواناً ورابط YouTube صالحاً');return;}
       const videos=readStudyVideos();videos.unshift({id:'sv-'+Date.now(),title,url,subject:document.getElementById('studyVideoSubject').value.trim(),level:document.getElementById('studyVideoLevel').value,type:document.getElementById('studyVideoType').value,desc:document.getElementById('studyVideoDesc').value.trim()});
       localStorage.setItem('educhat-study-videos',JSON.stringify(videos));e.target.reset();renderStudyVideos();toast('تمت إضافة الفيديو إلى مكتبتك المحلية');
+    });
+    document.getElementById('exportStudyVideosBtn').addEventListener('click',()=>{
+      const data=readStudyVideos();
+      const blob=new Blob([JSON.stringify({schema:1,exportedAt:new Date().toISOString(),videos:data},null,2)],{type:'application/json'});
+      const url=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download='educhat-study-videos.json'; a.click(); URL.revokeObjectURL(url);
+      toast('تم تصدير مكتبة الفيديوهات');
+    });
+    document.getElementById('importStudyVideosFile').addEventListener('change',async(e)=>{
+      const file=e.target.files?.[0]; if(!file)return;
+      try{
+        if(file.size>1024*1024)throw new Error('حجم الملف أكبر من 1MB');
+        const parsed=JSON.parse(await file.text());
+        const incoming=Array.isArray(parsed)?parsed:parsed.videos;
+        if(!Array.isArray(incoming))throw new Error('صيغة النسخة غير صحيحة');
+        const valid=incoming.filter(v=>v&&typeof v.title==='string'&&typeof v.url==='string'&&validStudyYoutubeUrl(v.url)).slice(0,300);
+        const existing=readStudyVideos(), seen=new Set(existing.map(v=>validStudyYoutubeUrl(v.url)).filter(Boolean));
+        const unique=valid.filter(v=>{const id=validStudyYoutubeUrl(v.url);if(seen.has(id))return false;seen.add(id);return true;}).map(v=>({...v,id:v.id||'sv-import-'+Date.now()+'-'+Math.random().toString(36).slice(2,8)}));
+        if(!unique.length)throw new Error('لم يتم العثور على روابط جديدة وصالحة');
+        localStorage.setItem('educhat-study-videos',JSON.stringify([...unique,...existing].slice(0,500));
+        renderStudyVideos(); toast('تم استيراد '+unique.length+' فيديو جديد');
+      }catch(err){toast(err.message||'فشل استيراد النسخة');}
+      e.target.value='';
     });
     document.getElementById('studyVideoSearch').addEventListener('input',renderStudyVideos);
     document.getElementById('studyVideoFilter').addEventListener('change',renderStudyVideos);
