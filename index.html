@@ -1834,7 +1834,7 @@
         const existing=readStudyVideos(), seen=new Set(existing.map(v=>validStudyYoutubeUrl(v.url)).filter(Boolean));
         const unique=valid.filter(v=>{const id=validStudyYoutubeUrl(v.url);if(seen.has(id))return false;seen.add(id);return true;}).map(v=>({...v,id:v.id||'sv-import-'+Date.now()+'-'+Math.random().toString(36).slice(2,8)}));
         if(!unique.length)throw new Error('لم يتم العثور على روابط جديدة وصالحة');
-        localStorage.setItem('educhat-study-videos',JSON.stringify([...unique,...existing].slice(0,500));
+        localStorage.setItem('educhat-study-videos',JSON.stringify([...unique,...existing].slice(0,500)));
         renderStudyVideos(); toast('تم استيراد '+unique.length+' فيديو جديد');
       }catch(err){toast(err.message||'فشل استيراد النسخة');}
       e.target.value='';
