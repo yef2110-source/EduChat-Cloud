@@ -25,3 +25,8 @@ test('study video library supports JSON backup and validated import', () => {
   assert.match(html, /seen\.has\(id\)/);
   assert.match(html, /slice\(0,500\)\)\)/);
 });
+
+test('adding a duplicate video URL is rejected', () => {
+  assert.match(html, /videos\.some\(v=>validStudyYoutubeUrl\(v\.url\)===videoId\)/);
+  assert.match(html, /هذا الفيديو موجود بالفعل في مكتبتك/);
+});
